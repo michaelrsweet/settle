@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE rfc>
+<?xml-stylesheet type='text/xsl' href='rfc7991.xslt' ?>
+<rfc ipr="trust200902" submissionType="IETF" category="info" version="3" docName="draft-ietf-settle-requirements-00" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <link href="10.17487/RFC8555" rel="describedBy"/>
+
+  <front>
+    <title abbrev="SETTLE Requirements">SEcure access To Tls Local rEsources (SETTLE) Requirements</title>
+    <seriesInfo name="RFC" status="informational" stream="IETF" value="draft-ietf-settle-requirements-00"/>
+
+    <author fullname="Michael Sweet" initials="M." role="editor" surname="Sweet">
+      <organization>Lakeside Robotics Corporation</organization>
+      <address>
+        <postal>
+          <street>1094 Valecrest St</street>
+          <city>Blezard Valley</city>
+          <region>Ontario</region>
+          <code>P0M 1E0</code>
+          <country>Canada</country>
+        </postal>
+        <email>msweet@msweet.org</email>
+      </address>
+    </author>
+    <author fullname="Michiel De Backker" initials="M." role="editor" surname="De Bakker"">
+      <organization/>
+      <address>
+        <email>mail@backkem.me</email>
+      </address>
+    </author>
+    <date year="2026"/>
+    <area>Internet</area>
+    <workgroup>SETTLE</workgroup>
+    <keyword>REQUIREMENTS</keyword>
+    <abstract>
+      <t>This document defines common terminology and the requirements for identifying, validating, and establishing secure connections with local network devices.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+      <t>Unencrypted communications have been historically designed for servers on local networks such as printers, routers, and SMB file sharing servers. However, with the advent of HTTPS everywhere, browsers disadvantage unencrypted communications by requiring a secure context for features such as Service Workers, Web Bluetooth, WebCrypto, WebTransport, and more. This increases the importance of a secure context to local domains. Non-HTTP protocols such as SMB3 encrypted file sharing would benefit from stronger server authentication and printing (IPP over HTTPS) would benefit from encrypted communications.</t>
+      <t>Existing deployments of TLS and other encrypted protocols on local networks typically make use of so-called "self-signed" X.509 certificates which lack the endorsement of a trusted third-party. In addition, network devices are unable to determine the trustworthiness of the local network, humorous solutions such as the "evil bit" from <xref target="RFC3514">"The Security Flag in the IPv4 Header"</xref> aside.</t>
+      <t>This document defines common terminology and the requirements for identifying, validating, and establishing secure connections with local network devices.</t>
+    </section>
+
+    <section title="Terminology">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119">"Key words for use in RFCs to Indicate Requirement Levels"</xref>.</t>
+      <dl>
+        <dt>Device:</dt>
+        <dd>(placeholder) Something that connects to network</dd>
+
+        <dt>Client Device:</dt>
+        <dd>(placeholder) A Device that is used exclusively by End Users</dd>
+
+        <dt>End User:</dt>
+        <dd>...</dd>
+
+        <dt>Infrastructure Device:</dt>
+        <dd>(placeholder) A Device that provides a service or capability, printer, camera, router, light switch, file server, etc.</dd>
+
+        <dt>Device Identity:</dt>
+        <dd>... MAC address + IDevID?</dd>
+
+        <dt>Network:</dt>
+        <dd>...</dd>
+
+        <dt>Network Identity:</dt>
+        <dd>...</dd>
+
+        <dt>Administrator:</dt>
+        <dd>...</dd>
+
+        <dt>Local Device Name:</dt>
+        <dd>(placeholder) Local DNS label for a Device, MUST be locally-unique, SHOULD be globally unique.</dd>
+
+<!--        <dt></dt>
+        <dd></dd>
+
+        <dt></dt>
+        <dd></dd>
+
+        <dt></dt>
+        <dd></dd>
+
+        <dt></dt>
+        <dd></dd>-->
+      </dl>
+    </section>
+
+    <section title="Security Model">
+      <t>...</t>
+    </section>
+
+    <section title="Requirements">
+      <t>...</t>
+    </section>
+
+    <section title="Security Considerations">
+      <t>...</t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+    </references>
+
+    <references title="Informative References">
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3514.xml"/>
+    </references>
+
+    <section title="Change History">
+      <t>[ RFC Editor: This section to be deleted before RFC publication ]</t>
+      <t>Month DD, 2026 - draft-ietf-settle-requirements-00</t>
+      <ul>
+	<li>Initial revision.</li>
+      </ul>
+    </section>
+  </back>
+</rfc>

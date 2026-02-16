@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE rfc>
+<?xml-stylesheet type='text/xsl' href='rfc7991.xslt' ?>
+<rfc ipr="trust200902" submissionType="independent" category="exp" version="3" docName="draft-sweet-iot-acme-07" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <link href="10.17487/RFC8555" rel="describedBy"/>
+
+  <front>
+    <title abbrev="ACME IoT Provisioning">ACME-Based Provisioning of IoT Devices</title>
+    <seriesInfo name="RFC" status="experimental" stream="independent" value="draft-sweet-iot-acme-07"/>
+
+    <author fullname="Michael Sweet" initials="M." role="editor" surname="Sweet">
+      <organization>Lakeside Robotics Corporation</organization>
+      <address>
+        <postal>
+          <street>1094 Valecrest St</street>
+          <city>Blezard Valley</city>
+          <region>Ontario</region>
+          <code>P0M 1E0</code>
+          <country>Canada</country>
+        </postal>
+        <email>msweet@msweet.org</email>
+      </address>
+    </author>
+
+    <date year="2025"/>
+    <area>Internet</area>
+    <workgroup>IOT Operations</workgroup>
+    <keyword>ACME</keyword>
+    <keyword>IoT</keyword>
+    <keyword>Provisioning</keyword>
+    <keyword>TLS</keyword>
+    <keyword>X.509</keyword>
+    <abstract>
+      <t>This document extends the Automatic Certificate Management Environment (ACME) to provision X.509 certificates for local Internet of Things (IoT) devices that are accepted by existing web browsers and other software running on End User client devices.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+      <t>IoT Devices are common on local networks and often utilize TLS <xref target="RFC8446"/> with self-signed X.509 certificates <xref target="RFC5280"/> to provide HTTPS <xref target="RFC9110"/> based web pages and services. Unfortunately, web browsers typically do not trust such certificates and show error messages intended to deter usage. Some IoT Devices also have manufacturer-supplied X.509 certificates, however due to the service life of such devices, the need for crypto-agility, and well-known challenges of secure key management, those certificates are better suited to attestation and secure network connection than direct use with TLS.</t>
+      <t>The goal of this document is to provide a method for providing trusted X.509 certificates for use with TLS that does not depend on an Internet connection or a service provided by the original device manufacturer, does not depend on credentials or key material provided with the device from the factory, allows a device to be moved to different networks or domains without interaction with the device manufacturer, and supports the needs of both simple home networks and complex enterprise networks.</t>
+      <t>Because of obvious security concerns on public or untrusted networks, this method is only used on private (home, business, etc.) networks that have at least basic access restrictions - a password or pre-shared key, physical access (Ethernet), and so forth.</t>
+      <section title="Connecting to the Network">
+        <t>This document is not concerned with the method of connecting Client or IoT Devices to the network. That said, the level of security and/or trust of the network and the proposed solution necessarily depends on the access controls, confidentiality, and validation provided by the network, as well as the quality of any identification and/or key material supplied by the manufacturer.</t>
+      </section>
+      <section title="Trusting IoT Devices on the Network">
+        <t>This document uses existing infrastructure, namely the network's <xref target="RFC3748">Extensible Authentication Protocol (EAP)</xref> server to establish IoT device trust and the network's <xref target="RFC2131">DHCP</xref> and <xref target="RFC1034">DNS</xref> services to discover the local <xref target="RFC8555">Automatic Certificate Management Environment (ACME)</xref> Server to use for that network. Local ACME Servers are discovered using either a DHCP option or a <xref target="RFC6763">DNS-SD</xref> service record from the network's DNS service, and the local ACME Server's X.509 certificate provides a usable and verifiable network identifier as well as the trust anchor for issued IoT Device X.509 certificates.</t>
+	<t>ACME defines a protocol for network services to obtain trusted X.509 credentials for use with TLS <xref target="RFC8446"/>. However, since existing ACME Servers depend on public Internet connectivity to the ACME Client for validation, and since those same servers cannot issue X.509 certificates for the ".local" domain, some changes are needed to support a local ACME Server. X.509 certificates issued by the local ACME server are only valid when accessing the IoT Device for the local DNS domain, the mDNS (".local") domain, or any link-local or private IP addresses. Local ACME Servers can be standalone servers (common in enterprise networks) or software that runs on a consumer Internet router/modem.</t>
+	<t>Because devices often connect to multiple, unconnected networks, trust and usage of X.509 certificates provided by a local ACME server is limited to that network, essentially creating an intermediate trust level below global Certificate Authorities (CAs).</t>
+      </section>
+    </section>
+
+    <section title="Terminology">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119">"Key words for use in RFCs to Indicate Requirement Levels"</xref>.</t>
+      <dl>
+        <dt>ACME Client:</dt>
+        <dd>A device that uses the ACME protocol to request certificate management actions, such as issuance or revocation.</dd>
+
+        <dt>ACME Server:</dt>
+        <dd>A device that implements the ACME protocol to respond to ACME Client requests, performing the requested actions if the client is authorized.</dd>
+
+        <dt>Certificate Authority (CA):</dt>
+        <dd>A trusted source for X.509 certificates used during negotiation of a TLS session. (TODO: Update from current TLS/X.509 specifications)</dd>
+
+        <dt>Client Device:</dt>
+        <dd>A computer, tablet, phone, or other End User device that accesses an IoT Device.</dd>
+
+        <dt>End User:</dt>
+        <dd>A person or software process that is authorized to use Client Devices and, through the Client Device, access and use IoT Devices.</dd>
+
+        <dt>IoT Device:</dt>
+        <dd>A camera, printer, switch, or other local device that provides services or functions to a Client Device.</dd>
+
+	<dt>Media Access Control (MAC) Address:</dt>
+	<dd>A unique identifier assigned to a network interface controller for use as a network address in communications within a network segment.</dd>
+
+        <dt>Private Network:</dt>
+        <dd>A network that requires some level of authorization and/or physical access to join such as an Ethernet network or a Wi-Fi network with a password or pre-shared key.</dd>
+
+        <dt>Public Network:</dt>
+        <dd>A network that does not require any level of authorization and/or physical access to join such as a cellular network or a public or guest Wi-Fi network with no password or pre-shared key at a cafe.</dd>
+
+	<dt>Service Set Identifier (SSID):</dt>
+	<dd>The name associated with a wireless network.</dd>
+
+	<dt>Trust On First Use (TOFU):</dt>
+	<dd>An unauthenticated public key obtained on first contact (and retained for future use) will be good enough to secure future communication <xref target="RFC7435"/>.</dd>
+
+        <dt>Uniform Resource Identifier (URI):</dt>
+        <dd>A compact sequence of characters that identifies an abstract or physical resource <xref target="RFC3986"/>.</dd>
+
+<!--        <dt></dt>
+        <dd></dd>
+
+        <dt></dt>
+        <dd></dd>
+
+        <dt></dt>
+        <dd></dd>
+
+        <dt></dt>
+        <dd></dd>-->
+      </dl>
+    </section>
+
+    <section title="Specification">
+      <section title="Default Host Name Convention">
+        <t>IoT devices SHOULD use a default host name composed of a vendor prefix followed by a unique identifier such as a serial number or MAC address, e.g., "ex123456abcdef" for an "Example" IoT device with a MAC address of 12:34:56:ab:cd:ef. This name can be used as a peer identifier for secure network connection and as a label in an mDNS and/or DNS name, e.g., "ex123456abcdef.local" and "ex123456abcdef.example.com". The use of unique identifiers minimizes the risk of accidental name collisions.</t>
+      </section>
+      <section title="Secure Network Connection">
+        <t>Client and IoT devices SHOULD securely connect to networks using IEEE 802.1X <xref target="RFC3748">Extensible Authentication Protocol (EAP)</xref>, <xref target="RFC5216">EAP-TLS Authentication Protocol</xref>, and the <xref target="RFC5247">EAP Key Management Framework</xref>. IoT devices that do not support these protocols MUST support stable MAC addresses to enable manual authorization of the device on the network.</t>
+        <t>Note: IoT devices with randomized MAC addresses would require manual authorization every time the device powers up.</t>
+      </section>
+      <section title="ACME Server Discovery">
+        <t>Client and IoT devices discover the local ACME Server using one of two methods (in order of precedence):</t>
+        <ol>
+          <li>Via DHCP Option NNN (ACME Server) when obtaining IPv4/IPv6 addresses. <em>Note:DHCP Option 60 (Vender Class Identifier <xref target="RFC3925"/>) with enterprise number 55357 (Lakeside Robotics Corporation) shall be used for purposes of prototyping this document.</em></li>
+          <li>Via a subsequent DNS-SD query sent to the configured DNS server and domain for the "_acme-server._tcp.domain" SRV record.</li>
+        </ol>
+        <t>Home networks will typically use the DHCP Option while larger (enterprise) networks providing a dedicated DNS domain will use the DNS-SD method.</t>
+        <t>Note: DNS-SD queries MUST NOT be performed using Multicast DNS (mDNS) <xref target="RFC6762"/> for security reasons.</t>
+      </section>
+      <section title="ACME Server Extensions">
+        <t>ACME <xref target="RFC8555"/> defines a protocol for managing trusted X.509 certificates. Organizations such as "Let's Encrypt" provide publicly available ACME servers, and such servers have led to the ubiquitous usage of TLS for internet web and email servers. However, public ACME servers typically cannot access local (private) devices and will not issue certificates for the mDNS ".local" domain. A local ACME server can both access local devices and issue certificates for local domains.</t>
+        <section title="Root (CA) Certificate">
+          <t>A local ACME server will typically generate a self-signed X.509 certificate as its root (CA) certificate and the local network's trust anchor. The certificate MUST use a SHA2 hash of at least 256 bits and MUST use either RSA encryption with a key length of at least 3072 bits or ECDSA encryption with the secp384r1 (P-384) or secp521r1 (P-521) curves. The expiration of the self-signed certificate MUST be between 1 and 10 years, inclusive. The certificate MUST contain subjectAltName extensions for the mDNS (".local") and local domain name(s), and MAY contain subjectAltName extensions for the current IP address(es) of the server. For example, if the local ACME server name is "router-fdb531" and the local domain is "example.com", the certificate will at least contain two subjectAltName extensions with values "DNS:router-fdb531.example.com" and "DNS:router-fdb531.local".</t>
+        </section>
+	<section title="Accounts">
+	  <t>ACME account objects contain an array of contact strings. Normally this array consists of "mailto:" URIs, however for local IoT devices an array of "https:" URIs should be used instead, one for each fully-qualified domain name used by the device.</t>
+	</section>
+	<section title="IoT Device Certificate Signing Requests">
+	  <t>The certificate signing request supplied by the IoT Device MUST use a SHA2 hash of at least 256 bits and MUST use either RSA encryption with a key length of at least 3072 bits or ECDSA encryption with the secp384r1 (P-384) or secp521r1 (P-521) curves.</t>
+	  <t>The commonName MUST be the device ID.</t>
+	  <t>The request MUST also contain subjectAltName extensions for the mDNS (".local") and any local domain name(s), MAY contain subjectAltName extensions for the current IP address(es) of the device, and MUST NOT contain subjectAltName extensions for "localhost". For example, if the device name is "device-12cd56" and the local domain is "example.com", the signing request will at least contain two subjectAltName extensions with values "DNS:device-12cd56.example.com" and "DNS:device-12cd56.local".</t>
+	</section>
+	<section title="Manual Approval of Signing Requests">
+	  <t>The local ACME server MUST provide interfaces to manually approve initial IoT Device certificate signing requests and revoke approvals of IoT Devices in order to protect against rogue devices obtaining trusted certificates. Once approved, the server can automatically approve renewals unless such approval has been revoked.</t>
+	  <t>When the local ACME server resides on a consumer Internet modem/router, such approvals will typically be authorized using the router's administrative account on the router's embedded web interface and/or mobile application.</t>
+	</section>
+        <section title="IoT Device Certificates">
+          <t>Certificates generated by the local ACME server MUST have an expiration of three months or less.</t>
+        </section>
+      </section>
+      <section title="Client Device Configuration">
+        <t>Client Devices, upon connecting to a network, MUST use ACME Server Discovery to determine whether the local network has an ACME Server. If it does, the Client Device connects to the server using HTTPS and copies the X.509 certificates for use in validating future connections to IoT Devices. The Client Device SHOULD utilize a TOFU validation policy for self-signed X.509 certificates unless otherwise configured, for example in a managed enterprise network environment. Client Devices can present UI informing and/or obtaining consent from the user to use or trust the root certificate, however such UI is beyond the scope of this document.</t>
+        <t>The Client Device MUST NOT use the supplied X.509 certificate when validating certificates on other networks. The certificate is typically associated with the network interface name, network SSID, and/or MAC address of the default router and MAY be associated with the local domain name. Client Devices MUST validate the host name(s) and/or IP address(es) to validate the CA certificate against the name(s) or IP address(es) supplied by the DHCP or DNS server during discovery. Since a certificate MAY be used for multiple networks, for example with a wireless cable modem that provides both Wi-Fi and Ethernet connectivity, such validation MUST allow for the presence of subjectAltName extensions containing values other than those provided by the DHCP or DNS server the Client uses.</t>
+      </section>
+      <section title="IoT Device Configuration">
+        <t>IoT Devices, upon connecting to a network, MUST use ACME Server Discovery to determine whether the local network has an ACME Server. If it does, the IoT Device connects to the server using HTTPS and uses the ACME protocol to obtain, renew, or verify an X.509 certificate for each network the device is connected to. The IoT Device SHOULD utilize a TOFU validation policy for self-signed X.509 certificates unless otherwise configured, for example in a managed enterprise network environment.</t>
+        <t>The IoT Device MAY share/reuse certificates between networks when those networks utilize the same ACME server and X.509 certificate.</t>
+      </section>
+    </section>
+
+    <section title="Security Considerations">
+      <t>The security considerations of IoT provisioning are similar to those described in <xref target="RFC1034"/>, <xref target="RFC2131"/>, <xref target="RFC6763"/>, <xref target="RFC8446"/>, and <xref target="RFC8555"/>. The following subsections describe additional security considerations.</t>
+      <section title="Trusting Local DHCP and DNS Infrastructure">
+        <t>This specification necessarily depends on all devices trusting the underlying network infrastructure, specifically the local DHCP and DNS servers. Public Networks cannot be trusted and MUST NOT use a local ACME server or its root certificate. Private Networks can be trusted more and SHOULD use a local ACME server and its root certificate. Sites can utilize Network Endpoint Assessment <xref target="RFC5209" /> and Trusted Network Connect (TNC) <xref target="RFC5792" /><xref target="RFC5793" /> to provide enhanced security and trust in the local network.</t>
+      </section>
+      <section title="Certificate Signing Request Validation">
+        <t>The local ACME Server MUST validate the subjectAltName values in certificate signing requests from IoT Devices. DNS name suffixes MUST be restricted to ".local" and the configured local domain name(s), and the leftmost label MUST NOT be the name of the local ACME Server or "localhost". IP addresses MUST be limited to link-local, loopback, and private use addresses.</t>
+      </section>
+      <section title="Man-in-the-Middle Attacks">
+        <t>Because the local ACME Server will often rely on a self-signed certificate and TOFU validation policy, a man-in-the-middle attack is possible with successful DHCP, DNS, and/or mDNS request interception and/or redirection. Such attacks can be detected using network monitoring tools, and the use of a long-lived root certificate helps to mitigate the possibility that compromised network connections or infrastructure will go undetected by the Client Device.</t>
+      </section>
+      <section title="Storage of Key Material">
+        <t>It is important for all devices to protect stored encryption keys from disclosure. Disclosure of the local ACME Server's private key will compromise all encrypted traffic on the local network. Disclosure of an IoT Device's private key will only affect that device's traffic.</t>
+      </section>
+      <section title="Revocation and Reissuance/Regeneration">
+        <t>All devices MUST provide a way for an End User to re-issue X.509 certificates and regenerate a new private/public key pair for certificates and certificate requests. The most common way is through a so-called "factory reset" process that restores a device to its original, factory configuration/state.</t>
+        <t>All devices SHOULD provide a way for an End User to revoke X.509 certificates.</t>
+      </section>
+      <section title="Use of mDNS">
+        <t>Multicast DNS (mDNS) <xref target="RFC6762"/> has a number of known security limitations. DHCP Option NNN provides the local ACME Server's fully-qualified domain name which can be resolved using mDNS, providing a small window for a man-in-the-middle attack during initial device connection. Such attacks can be detected using network monitoring tools and/or through the use of a root X.509 certificate from a trusted, public CA on the local ACME Server.</t>
+      </section>
+      <section title="mDNS Domain Name Collisions">
+        <t>Multicast DNS (mDNS) domain names ("example.local.") can collide with other network devices. While mDNS does define an algorithm to resolve name collisions, IoT Devices SHOULD use a default name with a unique identifier, e.g., "device-12cd56.local.", so that name changes are less likely. When an IoT Device's mDNS changes, it MUST revoke all certificates for the old name with the (current) local ACME Server and request new certificate(s) for the new name. Portable IoT Devices that connect to many different networks MUST track their mDNS hostname separately for each network and only revoke certificates for the currently connected network(s).</t>
+      </section>
+      <section title="Network Identification and Validation">
+        <t>Client and IoT Devices SHOULD identify networks using the local network interface name, MAC address of the default router, and/or the Wi-Fi SSID and validate the local ACME Server's root certificate when connecting. Wi-Fi validation is necessarily limited since Wi-Fi SSIDs are not unique. Client Devices MUST and IoT Devices SHOULD notify the End User when the root certificate changes for a network.</t>
+      </section>
+      <section title="Multiple Network Support">
+        <t>Multiple network configurations pose an interesting implementation challenge. The most typical multiple-network configurations are Wi-Fi + cellular and Wi-Fi + Ethernet. Cellular networks are Public Networks and MUST NOT be used for local ACME servers or root certificates. Ethernet networks are usually Private Networks whose mDNS namespace might or might not be bridged with the Wi-Fi network.</t>
+        <t>Client Devices MUST separately track and validate the root X.509 certificate for each local ACME Server. Similarly, IoT Devices MUST separately track, store, and use X.509 certificates for each local ACME Server. Client and IoT Devices MAY purge "old" network information if sufficient storage space is not available.</t>
+      </section>
+      <section title="Protection of Certificates and Key Material">
+        <t>IoT Devices and local ACME Servers MUST protect access to certificate and key material, allowing access only to approved software running on the device or server. The private key for an X.509 certificate MUST NOT be accessible outside of the corresponding device or server.</t>
+      </section>
+      <section title="Reuse of Key Material">
+        <t>IoT Devices MUST NOT reuse key material when generating an X.509 certificate signing request. Local ACME Servers MUST NOT reuse key material when generating the root X.509 certificate.</t>
+      </section>
+    </section>
+
+    <section title="IANA Considerations">
+      <section title="DHCP Option">
+        <t>In accordance with <xref target="RFC2132"/>, IANA has added the following new DHCP option to the <xref target="DHCP-REGISTRY">BOOTP Vendor Extensions and DHCP Options</xref> registry:</t>
+        <t>Tag: NNN</t>
+        <t>Name: ACME Server</t>
+        <t>Data Length: N (variable length)</t>
+        <t>Meaning: Fully-qualified domain name of the local ACME server</t>
+        <t>Reference: This document</t>
+      </section>
+      <section title="Service Name">
+        <t>In accordance with <xref target="RFC6335"/>, IANA has added the following new service name to the <xref target="SERVICE-REGISTRY">Service Name and Transport Protocol Port Number Registry</xref>:</t>
+        <t>Service Name: acme-server</t>
+        <t>Port Number: None</t>
+        <t>Transport Protocol: tcp</t>
+        <t>Description: Automatic Certificate Management Environment (ACME) server</t>
+        <t>Assignee: Michael Sweet</t>
+        <t>Contact: Michael Sweet</t>
+        <t>Reference: This document</t>
+        <t>Assignment Notes: Defined TXT keys: None</t>
+      </section>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1034.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2131.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2132.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3748.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3986.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5209.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5216.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5247.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5280.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5792.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5793.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6762.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6763.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6335.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7435.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8446.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8555.xml"/>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9110.xml"/>
+    </references>
+
+    <references title="Informative References">
+      <reference anchor="DHCP-REGISTRY" target="https://www.iana.org/assignments/bootp-dhcp-parameters/bootp-dhcp-parameters.xhtml#options">
+        <front>
+          <title>BOOTP Vendor Extensions and DHCP Options</title>
+          <author fullname="IANA"/>
+        </front>
+      </reference>
+      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3925.xml"/>
+      <reference anchor="SERVICE-REGISTRY" target="https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml">
+        <front>
+          <title>Service Name and Transport Protocol Port Number Registry</title>
+          <author fullname="IANA"/>
+        </front>
+      </reference>
+    </references>
+
+    <section title="Change History">
+      <t>[ RFC Editor: This section to be deleted before RFC publication ]</t>
+      <t>February 7, 2025 - draft-sweet-acme-iot-07</t>
+      <ul>
+        <li>Added discussion of a default host name with a unique identifier.</li>
+        <li>Added discussion of network connection security.</li>
+        <li>Added discussion of manual approval of certificate requests.</li>
+        <li>Added 802.1X device ID to CSRs/certificates.</li>
+        <li>Added EAP RFCs</li>
+      </ul>
+      <t>August 9, 2024 - draft-sweet-acme-iot-06</t>
+      <ul>
+        <li>Added discussion of network types - public, private, "domain".</li>
+        <li>Add security considerations - do not enable local trust root on public networks.</li>
+      </ul>
+      <t>January 30, 2024 - draft-sweet-acme-iot-05</t>
+      <ul>
+        <li>Clarified the contents and validation of X.509 root (CA) certificates.</li>
+        <li>Added note that a Client Device can display UI when connecting to a network with an ACME server.</li>
+        <li>Clarified key material security considerations.</li>
+        <li>Clarified that devices may purge old network information.</li>
+        <li>Updated X.509 certificate revocation requirement to SHOULD.</li>
+        <li>Clarified that X.509 certificates are only revokes on the current network and the mDNS hostname is tracked separately per network.</li>
+      </ul>
+      <t>August 2, 2023 - draft-sweet-acme-iot-04</t>
+      <ul>
+	<li>Updated introduction to provide a clearer explanation of the scope and purpose of the document.</li>
+	<li>Added security considerations for protecting the certificate and key materials to address concerns of malicious software running on the device.</li>
+	<li>Added security considerations for reusing key materials to address concerns that manufacturers might hardcode keys.</li>
+      </ul>
+      <t>February 6, 2023 - draft-sweet-acme-iot-03</t>
+      <ul>
+	<li>Added security considerations for trusting the local network infrastructure with references to NEA and TNC.</li>
+      </ul>
+      <t>July 14, 2022 - draft-sweet-acme-iot-02</t>
+      <ul>
+	<li>Added clarifications and more detail per Printer Working Group review at May 2022 face-to-face meeting, specifically more detail in the introduction and security considerations for mDNS Domain Name Collisions, Network Identification and Validation, and Multiple Network Support.</li>
+      </ul>
+      <t>April 14, 2022 - draft-sweet-acme-iot-01</t>
+      <ul>
+	<li>Added temporary use of DHCP vendor class option (60), per guidance from DHCP WG chair</li>
+      </ul>
+      <t>April 6, 2022 - draft-sweet-acme-iot-00</t>
+      <ul>
+	<li>Initial revision.</li>
+      </ul>
+    </section>
+  </back>
+</rfc>
