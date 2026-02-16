@@ -7,6 +7,8 @@ This repository is the temporary home of the
 [SETTLE]: https://datatracker.ietf.org/wg/settle/about/
 
 
-Documents:
+Current Documents:
 
-- `draft-ietf-settle-requirements.xml`: Requirements and scope.
+- `draft-ietf-settle-requirements.xml`: SETTLE Requirements (WG document)
+- `draft-sweet-iot-acme.xml`: ACME-Based Provisioning of IoT Devices (individual
+  draft)
