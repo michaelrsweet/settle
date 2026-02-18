@@ -9,6 +9,8 @@ This repository is the temporary home of the
 
 Current Documents:
 
-- `draft-ietf-settle-requirements.xml`: SETTLE Requirements (WG document)
+- SETTLE Requirements (WG document):
+  [Editor's copy](https://michaelrsweet.github.io/settle/draft-ietf-settle-requirements.html)
+  ([text](https://michaelrsweet.github.io/settle/draft-ietf-settle-requirements.txt))
 - `draft-sweet-iot-acme.xml`: ACME-Based Provisioning of IoT Devices (individual
   draft)
