@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install xml2rfc
         run: pip install xml2rfc
@@ -22,6 +22,8 @@ jobs:
         run: |
           xml2rfc draft-ietf-settle-requirements.xml --text
           xml2rfc draft-ietf-settle-requirements.xml --html
+          xml2rfc draft-sweet-iot-acme.xml --text
+          xml2rfc draft-sweet-iot-acme.xml --html
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -29,13 +31,14 @@ jobs:
           path: |
             draft-*.html
             draft-*.txt
+            draft-*.xml
+            index.html
 
       - name: Prepare output
         if: github.event_name == 'push'
         run: |
           mkdir public
-          cp draft-*.html draft-*.txt public/
-          echo '<meta http-equiv="refresh" content="0; url=draft-ietf-settle-requirements.html">' > public/index.html
+          cp draft-*.html draft-*.txt draft-*.xml index.html public/
 
       - name: Deploy to GitHub Pages
         if: github.event_name == 'push'

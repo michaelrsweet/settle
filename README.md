@@ -9,8 +9,10 @@ This repository is the temporary home of the
 
 Current Documents:
 
-- SETTLE Requirements (WG document):
-  [Editor's copy](https://michaelrsweet.github.io/settle/draft-ietf-settle-requirements.html)
-  ([text](https://michaelrsweet.github.io/settle/draft-ietf-settle-requirements.txt))
+- `draft-ietf-settle-requirements.xml`: SETTLE Requirements (WG document):
+  [Editor's copy](https://www.msweet.org/settle/draft-ietf-settle-requirements.html)
+  ([text](https://www.msweet.org/settle/draft-ietf-settle-requirements.txt))
 - `draft-sweet-iot-acme.xml`: ACME-Based Provisioning of IoT Devices (individual
-  draft)
+  draft):
+  [Editor's copy](https://www.msweet.org/settle/draft-sweet-iot-acme.html)
+  ([text](https://www.msweet.org/settle/draft-sweet-iot-acme.txt))
