@@ -2,11 +2,10 @@
 <!DOCTYPE rfc>
 <?xml-stylesheet type='text/xsl' href='rfc7991.xslt' ?>
 <rfc ipr="trust200902" submissionType="IETF" category="info" version="3" docName="draft-ietf-settle-requirements-00" xmlns:xi="http://www.w3.org/2001/XInclude">
-  <link href="10.17487/RFC8555" rel="describedBy"/>
 
   <front>
-    <title abbrev="SETTLE Requirements">SEcure access To Tls Local rEsources (SETTLE) Requirements</title>
-    <seriesInfo name="RFC" status="informational" stream="IETF" value="draft-ietf-settle-requirements-00"/>
+    <title abbrev="SETTLE Requirements">SEcure access To Tls Local rEsources (SETTLE) Problem Statement and Requirements</title>
+    <seriesInfo name="Internet-Draft" status="informational" stream="IETF" value="draft-ietf-settle-requirements-00"/>
 
     <author fullname="Michael Sweet" initials="M." role="editor" surname="Sweet">
       <organization>Lakeside Robotics Corporation</organization>
@@ -21,102 +20,200 @@
         <email>msweet@msweet.org</email>
       </address>
     </author>
+    
     <author fullname="Michiel De Backker" initials="M." role="editor" surname="De Backker">
       <organization/>
       <address>
         <email>mail@backkem.me</email>
       </address>
     </author>
-    <date year="2026"/>
+    
+    <date year="2026" month="February" day="21"/>
     <area>Internet</area>
     <workgroup>SETTLE</workgroup>
     <keyword>REQUIREMENTS</keyword>
+    <keyword>TLS</keyword>
+    <keyword>LOCAL</keyword>
+    
     <abstract>
-      <t>This document defines common terminology and the requirements for identifying, validating, and establishing secure connections with local network devices.</t>
+      <t>This document defines the problem statement, common terminology, security models, and technical requirements for identifying, validating, and establishing secure connections with local network devices. It outlines the challenges of extending the Web's Public Key Infrastructure (PKI) to local, offline, or ad-hoc environments, and specifies requirements for generating and distributing local trust anchors without relying on global certificate authorities.</t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction">
-      <t>Unencrypted communications have been historically designed for servers on local networks such as printers, routers, and SMB file sharing servers. However, with the advent of HTTPS everywhere, browsers disadvantage unencrypted communications by requiring a secure context for features such as Service Workers, Web Bluetooth, WebCrypto, WebTransport, and more. This increases the importance of a secure context to local domains. Non-HTTP protocols such as SMB3 encrypted file sharing would benefit from stronger server authentication and printing (IPP over HTTPS) would benefit from encrypted communications.</t>
-      <t>Existing deployments of TLS and other encrypted protocols on local networks typically make use of so-called "self-signed" X.509 certificates which lack the endorsement of a trusted third-party. In addition, network devices are unable to determine the trustworthiness of the local network, humorous solutions such as the "evil bit" from <xref target="RFC3514">"The Security Flag in the IPv4 Header"</xref> aside.</t>
-      <t>This document defines common terminology and the requirements for identifying, validating, and establishing secure connections with local network devices.</t>
+      <t>Unencrypted communications have been historically designed for servers on local networks such as printers, routers, and SMB file sharing servers. However, with the advent of HTTPS everywhere, browsers disadvantage unencrypted communications by requiring a secure context for features such as Service Workers, Web Bluetooth, WebCrypto, WebTransport, and more. Furthermore, browser security models such as Local Network Access (LNA) restrict public websites from making requests to private IP addresses without explicit secure contexts and user permissions. This increases the importance of a secure context to local domains. Non-HTTP protocols such as SMB3 encrypted file sharing would benefit from stronger server authentication and printing (IPP over HTTPS) would benefit from encrypted communications.</t>
+      <t>Existing deployments of TLS and other encrypted protocols on local networks typically make use of so-called "self-signed" X.509 certificates which lack the endorsement of a trusted third-party. Because the client User Agent lacks a cryptographic trust anchor for the local device, it presents a certificate warning. Users frequently disregard these warnings, training them to ignore security alerts and leaving them vulnerable to active interception. Conversely, network devices are unable to determine the trustworthiness of the local network, humorous solutions such as the "evil bit" from <xref target="RFC3514">"The Security Flag in the IPv4 Header"</xref> aside.</t>
+      <t>This document defines common terminology and the requirements for identifying, validating, and establishing secure connections with local network devices without relying on Trust On First Use (TOFU) or continuous internet connectivity.</t>
     </section>
 
     <section title="Terminology">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
       "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-      document are to be interpreted as described in <xref
-      target="RFC2119">"Key words for use in RFCs to Indicate Requirement Levels"</xref>.</t>
+      document are to be interpreted as described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
+      
       <dl>
         <dt>Device:</dt>
-        <dd>(placeholder) Something that connects to network</dd>
+        <dd>An entity with a network interface that connects to a local network.</dd>
 
-        <dt>Client Device:</dt>
-        <dd>(placeholder) A Device that is used exclusively by End Users</dd>
+        <dt>Client Device / User Agent (UA):</dt>
+        <dd>A Device that is used exclusively by End Users to access services (e.g., a web browser on a smartphone or laptop).</dd>
 
-        <dt>End User:</dt>
-        <dd>...</dd>
-
-        <dt>Infrastructure Device:</dt>
-        <dd>(placeholder) A Device that provides a service or capability, printer, camera, router, light switch, file server, etc.</dd>
+        <dt>Infrastructure Device (Target):</dt>
+        <dd>A Device that provides a service or capability on the local network (e.g., printer, camera, router, light switch, file server, smart home controller).</dd>
 
         <dt>Device Identity:</dt>
-        <dd>... MAC address + IDevID?</dd>
-
-        <dt>Network:</dt>
-        <dd>...</dd>
-
-        <dt>Network Identity:</dt>
-        <dd>...</dd>
-
-        <dt>Administrator:</dt>
-        <dd>...</dd>
+        <dd>A persistent, cryptographically verifiable identifier bound to a specific Device. This may be derived from a hardware manufacturer root (e.g., IDevID) or generated locally.</dd>
 
         <dt>Local Device Name:</dt>
-        <dd>(placeholder) Local DNS label for a Device, MUST be locally-unique, SHOULD be globally unique.</dd>
+        <dd>A DNS or mDNS label for a Device. It MUST be locally-unique, and SHOULD be globally unique to prevent collisions (e.g., a vendor prefix combined with a MAC address, such as "pr9f8e7d0a1b2c.local").</dd>
 
-<!--        <dt></dt>
-        <dd></dd>
+        <dt>Out-of-Band (OOB) Ceremony:</dt>
+        <dd>A mechanism for transferring trust entropy from a Device to a UA via a channel physically separate from the primary network interface (e.g., scanning a QR code, entering a PIN displayed on a screen, or pressing a physical button).</dd>
 
-        <dt></dt>
-        <dd></dd>
+        <dt>Trust Anchor:</dt>
+        <dd>A cryptographic public key or certificate that a UA implicitly trusts to verify the identity of a Target.</dd>
 
-        <dt></dt>
-        <dd></dd>
-
-        <dt></dt>
-        <dd></dd>-->
+        <dt>Referee (Local Manager):</dt>
+        <dd>A specific Infrastructure Device designated to act as a local certificate authority, trust broker, or directory for other devices on the network, effectively transitioning a mesh of unverified devices into a hub-and-spoke trust topology.</dd>
       </dl>
     </section>
 
+    <section title="Problem Statement">
+      <t>The core challenge of securing local network communications stems from the fundamental disconnect between the global Web PKI and local network topologies. This disconnect manifests in three distinct hurdles:</t>
+      
+      <ol>
+        <li><strong>Resolution:</strong> The name or identifier provided by the user or discovered via the network must be translated to an IP address within a local context.</li>
+        <li><strong>Identity Binding:</strong> The certificate presented by the target must correspond to the name the user or client requested.</li>
+        <li><strong>Trust Anchor Validation:</strong> The certificate must be cryptographically signed by a trust anchor recognized by the client.</li>
+      </ol>
+      
+      <t>On the public internet, these hurdles are cleared using global DNS, Subject Alternative Names (SANs) verified by Web PKI, and browser-bundled Root CA stores. In a local network, devices reside behind Network Address Port Translation (NAPT), use non-routable IP addresses (e.g., RFC 1918), lack delegated public domain names, and may operate completely offline.</t>
+      
+      <t>Attempts to solve this using global PKI (e.g., dynamic DNS resolving to local IPs paired with wildcard certificates) require persistent internet connectivity and complex lifecycle management, which is brittle for local infrastructure. Conversely, relying on custom IoT browsers or relaxing browser security models for local networks is rejected by browser vendors due to severe security risks (e.g., "confused deputy" and CSRF attacks against localhost and local devices).</t>
+      
+      <t>This represents an application of Zooko's Triangle: naming systems struggle to be simultaneously Human-meaningful, Secure, and Decentralized. SETTLE aims to provide an architecture that secures local connections without central authorities.</t>
+    </section>
+
     <section title="Security Model">
-      <t>...</t>
+      <t>The SETTLE architecture operates under the assumption of a Zero-Trust Local Area Network. The threat model includes the following constraints and capabilities:</t>
+      
+      <ul>
+        <li><strong>Active On-Path Attacker:</strong> The local network is assumed to be hostile. An adversary can intercept, drop, modify, and inject packets (Dolev-Yao model). This includes spoofing DNS/mDNS responses, cloning SSIDs (Evil Twin attacks), and attempting machine-in-the-middle (MITM) interceptions of TLS handshakes.</li>
+        <li><strong>No Implicit Trust on First Use (TOFU):</strong> Because an active attacker may be present at the moment of initial connection, blind acceptance of a self-signed certificate (TOFU) is cryptographically indistinguishable from accepting an attacker's key. TOFU is explicitly disqualified as a primary bootstrapping mechanism.</li>
+        <li><strong>Intermittent Connectivity:</strong> The solution MUST NOT fail closed if the local network is disconnected from the broader Internet. Devices must be able to securely pair and communicate in an air-gapped or offline environment.</li>
+        <li><strong>Supply Chain Variability:</strong> While some devices will possess manufacturer-installed certificates (e.g., IDevIDs per IEEE 802.1AR), the architecture must accommodate "self-hosted" devices built on generic computing hardware (e.g., a Raspberry Pi running open-source home automation software) where no supply chain authority exists.</li>
+      </ul>
+      
+      <t>Because trust cannot be spontaneously generated within a hostile channel, a Trust Anchor must be introduced from an external source. In the absence of global PKI or guaranteed supply-chain trust, the architecture must rely on the physical User to mediate the initial trust binding via an Out-of-Band (OOB) Ceremony.</t>
+    </section>
+
+    <section title="Operational Tracks">
+      <t>To prevent circular dependencies in deployment, the SETTLE requirements are organized into two composable operational tracks. Implementers may choose the track appropriate for their ecosystem, with Track B logically building upon Track A.</t>
+      
+      <section title="Track A: Direct Peer Bootstrapping">
+        <t>This track addresses the bootstrapping of a single link between a UA and a Target when shared trust is initially zero. It relies on an Out-of-Band (OOB) Ceremony (e.g., scanning a QR code that contains a public key hash or Password-Authenticated Key Exchange (PAKE) material) to establish a mutual Trust Anchor directly. This track is optimized for ad-hoc connections and generic hardware.</t>
+      </section>
+      
+      <section title="Track B: Scaled Trust via Referee">
+        <t>To avoid the user friction of performing OOB Ceremonies for every possible combination of devices in a network, this track introduces a trusted local intermediary (a Referee or Local Manager). The user bootstraps trust with the Referee (via Track A), and the Referee subsequently acts as a local Certificate Authority (e.g., using ACME) or trust broker for other Infrastructure Devices. The UA inherits trust for the network via its binding to the Referee.</t>
+      </section>
     </section>
 
     <section title="Requirements">
-      <t>...</t>
+      
+      <section title="Naming and Discovery (REQ-NAME)">
+        <dl>
+          <dt>REQ-NAME-01: Unique Identifiers</dt>
+          <dd>The system MUST provide a mechanism to assign unique names to local devices. To prevent collisions, names SHOULD incorporate high-entropy device-specific data, such as MAC addresses or public key hashes (e.g., "pr9f8e7d0a1b2c.local").</dd>
+          
+          <dt>REQ-NAME-02: Local Namespace Compatibility</dt>
+          <dd>Local device names MUST utilize standardized namespaces reserved for local use to ensure broad client support and prevent leakage to the global DNS root. Valid namespaces include ".local" for mDNS <xref target="RFC6762"/> and "home.arpa." for unicast DNS <xref target="RFC8375"/>.</dd>
+          
+          <dt>REQ-NAME-03: Independence from Global DNS</dt>
+          <dd>Name resolution MUST NOT depend on the availability or reachability of global DNS infrastructure.</dd>
+        </dl>
+      </section>
+
+      <section title="Trust and Bootstrapping (REQ-TRUST)">
+        <dl>
+          <dt>REQ-TRUST-01: Rejection of Network TOFU</dt>
+          <dd>The architecture MUST NOT rely on Trust On First Use (TOFU) executed exclusively over the local network interface for initial authentication.</dd>
+          
+          <dt>REQ-TRUST-02: Out-of-Band (OOB) Ceremony</dt>
+          <dd>The system MUST define or profile an OOB mechanism (e.g., QR code, numeric PIN, NFC) to transfer trust entropy or public key fingerprints from the Target to the UA, proving physical possession or proximity.</dd>
+          
+          <dt>REQ-TRUST-03: Pre-Installed Trust Optimization</dt>
+          <dd>The system SHOULD support the use of manufacturer-installed certificates (e.g., IDevID) to streamline bootstrapping, provided the client UA is provisioned to trust the manufacturer's root. This mechanism MUST NOT be the *only* method supported, to accommodate self-hosted software.</dd>
+          
+          <dt>REQ-TRUST-04: Dynamic Local Trust Store</dt>
+          <dd>User Agents SHOULD implement a scoped, dynamic trust store capable of ingesting and persisting Trust Anchors generated or verified via OOB Ceremonies, independent of the OS-level global PKI trust store.</dd>
+        </dl>
+      </section>
+
+      <section title="Protocol and Transport (REQ-TRANS)">
+        <dl>
+          <dt>REQ-TRANS-01: Modern Transport Security</dt>
+          <dd>All communications requiring a secure context MUST utilize TLS 1.3 <xref target="RFC8446"/> or equivalent modern transport security protocols (e.g., DTLS 1.3, QUIC).</dd>
+          
+          <dt>REQ-TRANS-02: Implicit TLS Preference</dt>
+          <dd>To minimize downgrade attacks and implementation complexity, the system SHOULD utilize Implicit TLS (connect-then-handshake) rather than connection-upgrade mechanisms (e.g., STARTTLS) <xref target="RFC8314"/>.</dd>
+          
+          <dt>REQ-TRANS-03: Subject Alternative Name (SAN) Matching</dt>
+          <dd>Device certificates MUST populate the Subject Alternative Name (SAN) extension with the device's Local Device Name and, if applicable, its local IP addresses. User Agents MUST verify these identities in accordance with <xref target="RFC9525"/>.</dd>
+        </dl>
+      </section>
+
+      <section title="Architecture and Scalability (REQ-ARCH)">
+        <dl>
+          <dt>REQ-ARCH-01: Standalone Operation</dt>
+          <dd>The system MUST operate securely without requiring Internet connectivity for initial configuration, trust bootstrapping, or steady-state operation.</dd>
+          
+          <dt>REQ-ARCH-02: Referee / Delegation Support</dt>
+          <dd>The system MUST support a hierarchical local trust model where a mutually authenticated Referee or local CA can issue credentials to other local devices, allowing a UA to trust a fleet of devices via a single OOB Ceremony with the Referee.</dd>
+          
+          <dt>REQ-ARCH-03: Device Lifecycle and Revocation</dt>
+          <dd>The system MUST provide mechanisms for revoking trust. A factory reset of an Infrastructure Device MUST cryptographically invalidate prior local trust bindings, necessitating a new bootstrapping ceremony.</dd>
+        </dl>
+      </section>
+
     </section>
 
     <section title="Security Considerations">
-      <t>...</t>
+      <section title="Security of the OOB Channel">
+        <t>The security of Track A relies entirely on the integrity of the Out-of-Band channel. If an attacker can manipulate the OOB channel (e.g., placing a malicious QR code sticker over the legitimate one on a device), they can successfully impersonate the device. UAs should provide clear UI feedback verifying the identity of the device being paired.</t>
+      </section>
+      
+      <section title="Privacy and Tracking">
+        <t>Utilizing MAC addresses or static hardware identifiers in Local Device Names (e.g., mDNS broadcasts) allows passive observers on the local network to track device presence and infer user behavior. While acceptable for stationary home infrastructure, portable devices SHOULD utilize privacy-preserving, rotating identifiers where possible.</t>
+      </section>
+      
+      <section title="Compromise of the Referee">
+        <t>In Track B deployments, the Referee acts as the root of trust for the local network. If the Referee is compromised, the attacker can issue trusted certificates for any name within the local namespace, enabling widespread MITM attacks against the UA. Referees should be implemented on hardened devices with minimal external attack surfaces.</t>
+      </section>
     </section>
   </middle>
 
   <back>
     <references title="Normative References">
-      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6762.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8375.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8446.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9525.xml"/>
     </references>
 
     <references title="Informative References">
-      <xi:include href="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3514.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3514.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8314.xml"/>
     </references>
 
     <section title="Change History">
       <t>[ RFC Editor: This section to be deleted before RFC publication ]</t>
-      <t>Month DD, 2026 - draft-ietf-settle-requirements-00</t>
+      <t>February 21, 2026 - draft-ietf-settle-requirements-00</t>
       <ul>
-	<li>Initial revision.</li>
+        <li>Initial revision based on SETTLE charter, WG mailing list consensus, and architectural analysis of local network trust constraints.</li>
       </ul>
     </section>
   </back>
