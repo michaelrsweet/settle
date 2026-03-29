@@ -2,9 +2,7 @@ name: I-D Build
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+  delete:
 
 permissions:
   contents: write
@@ -12,18 +10,19 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v6
 
       - name: Install xml2rfc
         run: pip install xml2rfc
 
-      - name: Build draft
+      - name: Build drafts
         run: |
-          xml2rfc draft-ietf-settle-requirements.xml --text
-          xml2rfc draft-ietf-settle-requirements.xml --html
-          xml2rfc draft-sweet-iot-acme.xml --text
-          xml2rfc draft-sweet-iot-acme.xml --html
+          for xml in draft-*.xml; do
+            xml2rfc "$xml" --text
+            xml2rfc "$xml" --html
+          done
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -35,14 +34,47 @@ jobs:
             index.html
 
       - name: Prepare output
-        if: github.event_name == 'push'
         run: |
-          mkdir public
-          cp draft-*.html draft-*.txt draft-*.xml index.html public/
+          mkdir -p public
+          SAFE_BRANCH="${GITHUB_REF_NAME//\//-}"
+
+          if [ "$SAFE_BRANCH" = "main" ]; then
+            cp draft-*.html draft-*.txt draft-*.xml index.html public/
+          else
+            for f in draft-*.html draft-*.txt; do
+              base="${f%.*}"
+              ext="${f##*.}"
+              cp "$f" "public/${SAFE_BRANCH}-preview-${base}.${ext}"
+            done
+          fi
 
       - name: Deploy to GitHub Pages
-        if: github.event_name == 'push'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+          keep_files: true
+
+  cleanup:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'delete' && github.event.ref_type == 'branch'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+
+      - name: Remove preview files for deleted branch
+        run: |
+          SAFE_BRANCH="${{ github.event.ref }}"
+          SAFE_BRANCH="${SAFE_BRANCH//\//-}"
+          rm -f "${SAFE_BRANCH}-preview-"*
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Remove preview files for deleted branch"
+            git push
+          fi
