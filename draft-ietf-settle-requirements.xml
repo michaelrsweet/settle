@@ -20,40 +20,40 @@
         <email>msweet@msweet.org</email>
       </address>
     </author>
-    
+
     <author fullname="Michiel De Backker" initials="M." role="editor" surname="De Backker">
       <organization/>
       <address>
         <email>mail@backkem.me</email>
       </address>
     </author>
-    
+
     <date year="2026" month="February" day="21"/>
     <area>Internet</area>
     <workgroup>SETTLE</workgroup>
     <keyword>REQUIREMENTS</keyword>
     <keyword>TLS</keyword>
     <keyword>LOCAL</keyword>
-    
+
     <abstract>
-      <t>This document defines the problem statement, common terminology, security models, and technical requirements for identifying, validating, and establishing secure connections with local network devices. It outlines the challenges of extending the Web's Public Key Infrastructure (PKI) to local, offline, or "limited domain" environments. The document specifies requirements for privacy-preserving discovery, generating and distributing local trust anchors, and establishing mutually authenticated secure contexts without relying on global certificate authorities or insecure Trust On First Use (TOFU) mechanisms.</t>
+      <t>This document defines the problem statement, common terminology, security models, and technical requirements for identifying, validating, and establishing secure connections with local network devices. It outlines the challenges of extending the Web's Public Key Infrastructure (PKI) to local, offline, or "limited domain" environments. The document specifies requirements for privacy-preserving discovery, generating and distributing local trust anchors, and establishing mutually authenticated secure contexts without relying on global certificate authorities or problematic Trust On First Use (TOFU) mechanisms.</t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction">
-      <t>Unencrypted communications have historically been the default for servers on local networks such as printers, routers, and file-sharing servers. However, with the advent of HTTPS everywhere, browsers disadvantage unencrypted communications by requiring a Secure Context for features such as Service Workers, Web Bluetooth, WebCrypto, WebTransport, WebRTC, and Direct Sockets. The concept of "Limited Domains" <xref target="RFC8799"/> encapsulates these local, constrained environments, but existing web security models struggle to adapt to them.</t>
-      
-      <t>Furthermore, modern browser security models, such as Local Network Access (LNA), restrict public websites from making requests to private IP addresses without explicit secure contexts and user permissions, aiming to prevent "confused deputy" attacks against localhost and local devices. This significantly increases the importance of establishing a Secure Context for local domains. Non-HTTP protocols, such as SMB3 encrypted file sharing and printing (IPP over HTTPS), also benefit from stronger server authentication and encrypted communications.</t>
-      
-      <t>Existing deployments of TLS on local networks typically use "self-signed" X.509 certificates that lack the endorsement of a trusted third party. Because the client User Agent lacks a cryptographic trust anchor for the local device, it presents a certificate warning. Users frequently disregard these warnings, leading to warning fatigue and leaving them vulnerable to active interception. Conversely, network devices are unable to determine the trustworthiness of the local network, humorous solutions such as the "evil bit" from <xref target="RFC3514"/> aside.</t>
-      
-      <t>This document defines common terminology and requirements for discovering, identifying, validating, and establishing secure connections with local network devices without relying on Trust On First Use (TOFU) or continuous internet connectivity.</t>
+      <t>Local networks have historically used a mix of encrypted and unencrypted communications with no common method to establish trust. Access is provided to those who have the Wi-Fi password or an Ethernet cable, and the connected device simply trusts the information provided to it by the DHCP service on that network. In contrast, the Internet increasingly uses encrypted communications with a well-regulated system of Certificate Authorities, Domain Name Providers, Address Registries, and distributed Domain Name Services that form the basis of trust on the "modern web."</t>
+
+      <t>With the advent of HTTPS everywhere, browsers disadvantage web services using unencrypted communications by requiring a Secure Context for features such as Direct Sockets, Geolocation, Service Workers, Web Bluetooth, WebCrypto, WebTransport, and WebRTC. The concept of "Limited Domains" <xref target="RFC8799"/> encapsulates these local, constrained environments, but existing web security models struggle to adapt to them. Furthermore, modern browser security models, such as Local Network Access (LNA), restrict public websites from making requests to private IP addresses without explicit secure contexts and user permissions.</t>
+
+      <t>Existing deployments of TLS on local networks typically use "self-signed" X.509 certificates that lack the endorsement of a trusted party, relying instead on Trust on First Use (TOFU) mechanisms. Because the client User Agent lacks a cryptographic trust anchor for the local device, it presents a "scary" certificate warning. Users frequently disregard these warnings, leading to warning fatigue and leaving them vulnerable to active interception. Conversely, network devices are unable to determine the trustworthiness of the local network, humorous solutions such as the "evil bit" from <xref target="RFC3514"/> aside.</t>
+
+      <t>This document defines common terminology and requirements for discovering, identifying, validating, and establishing secure connections with local network devices without relying on Trust On First Use (TOFU) or continuous Internet connectivity.</t>
     </section>
 
     <section title="Terminology">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
-      
+
       <dl>
         <dt>Secure Context:</dt>
         <dd>An environment meeting the minimum standards of authentication and confidentiality as defined by the W3C Secure Contexts specification <xref target="W3C.SecureContexts"/>.</dd>
@@ -61,38 +61,63 @@
         <dt>Bootstrapping:</dt>
         <dd>The process of establishing an initial trust relationship and secure communication channel between a User Agent and a Device where no prior relationship exists.</dd>
 
-        <dt>Trust On First Use (TOFU):</dt>
-        <dd>An approach where a client blindly accepts the first cryptographic identity (e.g., public key or certificate) presented by a server without external verification.</dd>
+	<dt>Certificate Authority:</dt>
+	<dd>A party or service <xref target="RFC8555"/> that provides Cryptographic Identities that are signed by one or more Trust Anchors for the purpose of establishing trust <xref target="RFC5280"/>.</dd>
+
+        <dt>Client Device:</dt>
+        <dd>A Device used primarily by End Users to access services, e.g., a smartphone, a laptop, a tablet.</dd>
+
+	<dt>Client Identity:</dt>
+	<dd>A Cryptographic Identity bound to a Client Device that has been signed by a Trust Anchor.</dd>
+
+        <dt>Cryptographic Identity:</dt>
+        <dd>A persistent, cryptographically verifiable identifier, e.g., an X.509 public key infrastructure certificate <xref target="RFC5280">.</dd>
 
         <dt>Device:</dt>
         <dd>An entity with a network interface that connects to a local network.</dd>
 
-        <dt>Client Device / User Agent (UA):</dt>
-        <dd>A Device used primarily by End Users to access services (e.g., a web browser on a smartphone).</dd>
-
-        <dt>Infrastructure Device (Target):</dt>
-        <dd>A Device providing a service on the local network (e.g., printer, router, IoT hub).</dd>
-
         <dt>Device Identity:</dt>
-        <dd>A persistent, cryptographically verifiable identifier bound to a specific Device. This may be derived from a hardware manufacturer root (e.g., Initial Device Identifier, IDevID <xref target="IEEE.802.1AR"/>) or generated locally.</dd>
+        <dd>A Cryptographic Identifier bound to a specific Device. This may be derived from a hardware manufacturer root, e.g., Initial Device Identifier, IDevID <xref target="IEEE.802.1AR"/>, or locally generated value.</dd>
 
-        <dt>Local Device Name:</dt>
-        <dd>A DNS or mDNS label for a Device. It MUST be locally unique, and SHOULD be globally unique to prevent collisions.</dd>
+        <dt>Device Name:</dt>
+        <dd>A DNS or mDNS label for a Device. [MOVE THIS: It MUST be locally unique, and SHOULD be globally unique to prevent collisions.]</dd>
+
+        <dt>Infrastructure Device:</dt>
+        <dd>A Device providing a service on the local network, e.g., a printer, a router, an IoT hub.</dd>
+
+	<dt>Infrastructure Identity:</dt>
+	<dd>A Cryptographic Identity bound to an Infrastructure Device that has been signed by a Trust Anchor.</dd>
+
+	<dt>Local Certificate Authority:</dt>
+	<dd>A Certificate Authority for the local network.</dd>
+
+	<dt>Local Trust Anchor:</dt>
+	<dd>A Trust Anchor for the local network.</dd>
+
+	<dt>Origin Server:</dt>
+	<dd>A program that can originate authoritative responses for a given target resource <xref target="RFC9110"/>, e.g. a web server..</dd>
 
         <dt>Out-of-Band (OOB) Ceremony:</dt>
-        <dd>A mechanism for transferring trust entropy between a Device and a UA via a channel physically separate from the primary network interface. Different mechanisms offer varying security properties, including QR codes (visual, high entropy), PIN entry (manual, low entropy), Short Authentication Strings (SAS), Near Field Communication (NFC), or Push-Button Configuration (PBC).</dd>
+        <dd>A mechanism for transferring trust entropy via a channel physically separate from the network. [MOVE THIS: Different mechanisms offer varying security properties, including QR codes (visual, high entropy), PIN entry (manual, low entropy), Short Authentication Strings (SAS), Near Field Communication (NFC), or Push-Button Configuration (PBC).]</dd>
 
         <dt>Trust Anchor:</dt>
-        <dd>A cryptographic public key or certificate that a UA implicitly trusts to verify the identity of a Target.</dd>
+        <dd>A Cryptographic Identity that is trusted by a Client Device and/or UA.</dd>
+
+        <dt>Trust On First Use (TOFU):</dt>
+        <dd>An approach where a Client Device and/or UA accepts the first Cryptographic Identity presented by an Infrastructure Device or Origin Server. The identity is sometimes confirmed by an End User before acceptance.</dd>
 
         <dt>Referee (Local Manager):</dt>
-        <dd>A specific Infrastructure Device designated to act as a local certificate authority or trust broker, transitioning a mesh of unverified devices into a hub-and-spoke trust topology.</dd>
+        <dd>An Infrastructure Device that is designated as the Local Certificate Authority/trust broker, transitioning a mesh of unverified devices into a hub-and-spoke trust topology. [QUESTION: Is the latter a hard requirement or just how current referees are defined/implemented?]</dd>
+
+        <dt>User Agent (UA):</dt>
+        <dd>A client program that initiates a request to an Origin Server <xref target="RFC9110"/>, e.g., a web browser.</dd>
+
       </dl>
     </section>
 
     <section title="Security and Threat Model">
       <t>The SETTLE architecture operates under the assumption of a Zero-Trust Local Area Network. Trust cannot be spontaneously generated within a channel controlled by an active adversary; it must be introduced from an external source (a Trust Anchor). The threat model includes the following constraints and capabilities:</t>
-      
+
       <ul>
         <li><strong>Active On-Path Attacker (Dolev-Yao):</strong> The local network is assumed to be hostile. An adversary can intercept, drop, modify, and inject packets. This includes spoofing DNS/mDNS responses and cloning SSIDs to act as a rogue access point (Evil Twin attacks).</li>
         <li><strong>No Implicit Trust on First Use (TOFU):</strong> Because an active attacker may be present at the moment of initial connection, blind acceptance of a self-signed certificate (TOFU) is cryptographically indistinguishable from accepting an attacker's key. TOFU is explicitly disqualified as a primary bootstrapping mechanism.</li>
@@ -100,25 +125,25 @@
         <li><strong>Intermittent Connectivity:</strong> The solution MUST NOT fail closed if the local network is disconnected from the broader Internet. Devices must be able to securely pair and communicate in an air-gapped or offline environment.</li>
         <li><strong>Supply Chain Variability:</strong> While some devices will possess IDevIDs, the architecture must accommodate "self-hosted" devices built on generic computing hardware (where no single supply chain authority exists).</li>
       </ul>
-      
+
       <t>Because global PKI is unsuited for local names, and TOFU provides no active-attacker protection, a Secure Context requires either a rigorous pre-installed root (which fails for generic hardware) or the physical User to mediate the initial trust binding via an Out-of-Band (OOB) Ceremony.</t>
     </section>
 
     <section title="Problem Statement and Formal Derivation">
       <t>The core challenge of securing local network communications stems from the disconnect between the global Web PKI and local network topologies. Securing an HTTPS connection requires clearing three hurdles:</t>
-      
+
       <ol>
         <li><em>Resolution:</em> The identifier provided by the user or discovered on the network must translate to an IP address.</li>
         <li><em>Identity Binding:</em> The certificate presented by the target must correspond to the requested name.</li>
         <li><em>Trust Anchor Validation:</em> The certificate must be cryptographically signed by a trust anchor recognized by the client.</li>
       </ol>
-      
-      <t>On the public internet, these are solved via global DNS, Web PKI, and browser-bundled Root CAs. On a local network, devices reside behind NAT, use non-routable IP addresses (e.g., <xref target="RFC3927"/>, <xref target="RFC4193"/>), lack delegated public domain names, and face address-space ambiguity (e.g., CGNAT 100.64.0.0/10 spaces being treated as public by some parsers and private by others).</t>
+
+      <t>On the public Internet, these are solved via global DNS, Web PKI, and browser-bundled Root CAs. On a local network, devices reside behind NAT, use non-routable IP addresses (e.g., <xref target="RFC3927"/>, <xref target="RFC4193"/>), lack delegated public domain names, and face address-space ambiguity (e.g., CGNAT 100.64.0.0/10 spaces being treated as public by some parsers and private by others).</t>
 
       <t>This represents an application of Zooko's Triangle <xref target="ZookosTriangle"/>: naming systems struggle to be simultaneously Human-meaningful, Secure, and Decentralized. To solve this, SETTLE must bypass the following flawed approaches:</t>
-      
+
       <ul>
-        <li><em>The Cloud/Dynamic DNS Workaround (e.g., Plex Model):</em> Approaches using dynamic DNS to map local IPs to global subdomains paired with wildcard certificates require persistent internet connectivity, external infrastructure, and fail completely in air-gapped environments. They also leak local topologies to global DNS.</li>
+        <li><em>The Cloud/Dynamic DNS Workaround (e.g., Plex Model):</em> Approaches using dynamic DNS to map local IPs to global subdomains paired with wildcard certificates require persistent Internet connectivity, external infrastructure, and fail completely in air-gapped environments. They also leak local topologies to global DNS.</li>
         <li><em>Manufacturer-Only Trust:</em> Relying solely on manufacturer-installed certificates (IDevID) creates a "naming disconnect" (the cert binds a key to a serial number, not a local name like "printer.local"). Furthermore, it excludes "self-hosted" software running on generic hardware.</li>
         <li><em>Trust On First Use (TOFU):</em> As established in the Threat Model, TOFU automates vulnerability rather than solving warning fatigue.</li>
       </ul>
@@ -128,7 +153,7 @@
 
     <section title="Prior Art and Related Work">
       <t>The SETTLE architecture builds upon and differentiates itself from several existing approaches:</t>
-      
+
       <ul>
         <li><strong>BRSKI and BRSKI-PRM:</strong> Bootstrapping Remote Secure Key Infrastructure <xref target="RFC8995"/> automates provisioning using manufacturer IDevIDs. BRSKI-PRM <xref target="I-D.ietf-anima-brski-prm"/> demonstrates the value of <em>object security</em> (signed Vouchers) over transport security for environments where pledges cannot initiate TLS connections. While powerful, BRSKI requires a supply chain root of trust, which is absent in self-hosted consumer scenarios.</li>
         <li><strong>Matter Protocol:</strong> Matter utilizes Password-Authenticated Session Establishment (PASE) <xref target="Matter"/> for onboarding. However, security analyses have highlighted flaws including low-entropy (27-bit) passcodes and static salts, emphasizing the need for higher entropy in OOB ceremonies.</li>
@@ -143,26 +168,26 @@
 
     <section title="Operational Tracks">
       <t>To prevent circular dependencies, SETTLE requirements are organized into two composable tracks. Implementers may choose the track appropriate for their ecosystem.</t>
-      
+
       <section title="Track A: Direct Peer Bootstrapping">
         <t>This track addresses the bootstrapping of a single link between a UA and a Target when shared trust is initially zero. It relies on an Out-of-Band (OOB) Ceremony (e.g., scanning a QR code as in DPP <xref target="DPP"/>) to transfer trust entropy and establish a mutual Trust Anchor directly. This track may use transport security (e.g., Bootstrapped TLS <xref target="I-D.ietf-emu-bootstrapped-tls"/>) or object security (e.g., signed payloads). A promising pattern is to establish a provisional TLS connection using self-signed certificates, then authenticate it via a Password-Authenticated Key Exchange (PAKE) such as SPAKE2 <xref target="RFC9382"/> bound to the OOB secret, as demonstrated by the Open Screen Protocol <xref target="W3C.OpenScreen"/>. Separately, <xref target="I-D.ietf-tls-pake"/> proposes native TLS 1.3 support for PAKE-based authentication, reflecting broader interest in standardizing PAKE mechanisms at the transport layer. This track is optimized for ad-hoc connections and generic hardware, bridging the gap without relying on any intermediaries.</t>
       </section>
-      
+
       <section title="Track B: Scaled Trust via Referee">
         <t>To avoid the user friction of performing manual OOB Ceremonies for every device, this track introduces a trusted local intermediary (a Referee <xref target="I-D.wing-settle-referee"/>). The user bootstraps trust with the Referee (via Track A). The Referee subsequently acts as a local Certificate Authority (e.g., using ACME <xref target="RFC8555"/>, <xref target="I-D.sweet-iot-acme"/> or EST <xref target="RFC7030"/>) to issue credentials to other Infrastructure Devices. The UA inherently trusts the network via its binding to the Referee.</t>
       </section>
     </section>
 
     <section title="Requirements">
-      
+
       <section title="Naming and Discovery (REQ-NAME)">
         <dl>
           <dt>REQ-NAME-01: Unique Identifiers</dt>
           <dd>The system MUST provide a mechanism to assign unique names to local devices. To prevent collisions, names SHOULD incorporate high-entropy device-specific data, such as MAC addresses <xref target="I-D.housley-lamps-macaddress-on"/> or public key hashes <xref target="I-D.wing-settle-public-key-hash"/>.</dd>
-          
+
           <dt>REQ-NAME-02: Local Namespace Compatibility</dt>
           <dd>Local device names MUST utilize standardized namespaces reserved for local or non-DNS use to ensure broad client support. Valid namespaces include ".local" for mDNS <xref target="RFC6762"/>, "home.arpa." for unicast DNS <xref target="RFC8375"/>, or ".alt" <xref target="RFC9476"/>.</dd>
-          
+
           <dt>REQ-NAME-03: Independence from Global DNS</dt>
           <dd>Name resolution MUST NOT depend on the availability of global DNS infrastructure.</dd>
 
@@ -178,13 +203,13 @@
         <dl>
           <dt>REQ-TRUST-01: Rejection of Network TOFU</dt>
           <dd>The architecture MUST NOT rely on Trust On First Use (TOFU) executed exclusively over the local network interface for initial authentication.</dd>
-          
+
           <dt>REQ-TRUST-02: Out-of-Band (OOB) Ceremony</dt>
           <dd>The system MUST define or profile an OOB mechanism to transfer trust entropy. The OOB material MUST provide at least 128 bits of entropy to resist offline dictionary and GPU brute-force attacks.</dd>
-          
+
           <dt>REQ-TRUST-03: Pre-Installed Trust Optimization</dt>
           <dd>The system SHOULD support the use of manufacturer-installed certificates (e.g., IDevID <xref target="IEEE.802.1AR"/>, <xref target="I-D.irtf-t2trg-taxonomy-manufacturer-anchors"/>). When used, the system MUST define a mechanism (e.g., Vouchers <xref target="RFC8366"/>) to cryptographically bind the manufacturer-provided identity to the user-facing Local Device Name. This mechanism MUST NOT be the only method supported.</dd>
-          
+
           <dt>REQ-TRUST-04: Dynamic Local Trust Store</dt>
           <dd>User Agents MUST implement a scoped, dynamic trust store capable of ingesting and persisting Trust Anchors generated or verified via OOB Ceremonies, independent of the OS-level global PKI trust store.</dd>
 
@@ -197,10 +222,10 @@
         <dl>
           <dt>REQ-TRANS-01: Modern Transport Security</dt>
           <dd>All communications requiring a secure context MUST utilize TLS 1.3 <xref target="RFC8446"/> or equivalent modern transport security protocols.</dd>
-          
+
           <dt>REQ-TRANS-02: Implicit TLS Preference</dt>
           <dd>To minimize downgrade attacks, the system SHOULD utilize Implicit TLS (connect-then-handshake) rather than connection-upgrade mechanisms (e.g., STARTTLS) <xref target="RFC8314"/>.</dd>
-          
+
           <dt>REQ-TRANS-03: Subject Alternative Name (SAN) Matching</dt>
           <dd>Device certificates MUST populate the Subject Alternative Name (SAN) extension. User Agents MUST verify these identities in accordance with <xref target="RFC9525"/> and IoT TLS profiles <xref target="I-D.ietf-uta-tls13-iot-profile"/>.</dd>
 
@@ -216,10 +241,10 @@
         <dl>
           <dt>REQ-ARCH-01: Standalone Operation</dt>
           <dd>The system MUST operate securely without requiring Internet connectivity.</dd>
-          
+
           <dt>REQ-ARCH-02: Referee / Delegation Support</dt>
           <dd>The system MUST support a hierarchical local trust model (Track B) where a mutually authenticated Referee can issue credentials to other local devices.</dd>
-          
+
           <dt>REQ-ARCH-03: Device Lifecycle and Key Rotation</dt>
           <dd>The system MUST provide mechanisms for routine key rotation, certificate renewal without user intervention, and trust revocation. A factory reset of a Device MUST cryptographically invalidate and purge all prior local trust bindings.</dd>
 
@@ -238,7 +263,7 @@
 
     <section title="Security Considerations">
       <t>The SETTLE architecture assumes a hostile local network. The following threats must be mitigated by compliant implementations.</t>
-      
+
       <section title="Evil Twin and Network Impersonation">
         <t>An attacker may clone a local Wi-Fi access point (Evil Twin), spoof BSSIDs, or poison mDNS caches to redirect traffic to a malicious endpoint. Because SETTLE mandates an OOB Ceremony (REQ-TRUST-02) and rejects pure TOFU, the UA will detect the certificate mismatch and abort the connection, neutralizing the impersonation.</t>
       </section>
@@ -262,7 +287,7 @@
       <section title="Supply Chain Attacks">
         <t>When utilizing Pre-Installed Trust (IDevID), a compromised manufacturer or stolen batch of private keys allows an attacker to masquerade as a legitimate device. UAs SHOULD support mechanisms to constrain manufacturer trust to specific scopes or require secondary local validation.</t>
       </section>
-      
+
       <section title="OS Isolation of DHCP Configuration">
         <t>While DHCP options exist to distribute network configurations, modern operating systems actively isolate DHCP-provided data from User Agents (browsers) to prevent rogue DHCP servers from injecting malicious trust anchors. Consequently, SETTLE cannot rely on DHCP for the distribution of Trust Anchors to User Agents, reinforcing the need for OOB or application-layer bootstrapping.</t>
       </section>
@@ -271,14 +296,14 @@
         <t>Local networks are vulnerable to resource exhaustion. Malicious peers may flood the network with mDNS advertisements, initiate thousands of TLS handshakes, or attempt to exhaust certificate enrollment limits (e.g., attacking a local ACME server). Implementations SHOULD employ rate-limiting and prioritize OOB-authenticated traffic.</t>
       </section>
     </section>
-    
+
     <section title="Privacy Considerations">
       <t>In accordance with <xref target="RFC6973"/>, privacy vulnerabilities in local networks must be considered.</t>
-      
+
       <t><strong>Device Tracking:</strong> Utilizing MAC addresses or static hardware identifiers in Local Device Names (e.g., mDNS broadcasts) allows passive observers on the local network to track device presence and infer user behavior. Portable devices SHOULD utilize privacy-preserving, rotating identifiers.</t>
-      
+
       <t><strong>Account-Scoped Identifiers:</strong> Embedding account-level UUIDs into local certificates (as seen in some proprietary local sharing protocols) allows devices belonging to the same user to be correlated by passive observers. Device identities MUST be scoped to the device itself, not a global user account, unless protected by an encrypted transport.</t>
-      
+
       <t><strong>Hash-Based Contact Leaks:</strong> Transmitting truncated hashes of contact information (e.g., phone numbers or emails) for mutual discovery is vulnerable to brute-force reversal. Implementations prioritizing privacy SHOULD utilize Private Set Intersection (PSI) <xref target="PrivateDrop"/> or similar cryptographic techniques for discovery.</t>
     </section>
 
@@ -322,7 +347,7 @@
         </front>
         <seriesInfo name="IEEE" value="802.1AR-2018"/>
       </reference>
-      
+
       <reference anchor="Matter" target="https://csa-iot.org/all-solutions/matter/">
         <front>
           <title>Matter Specification, Version 1.4</title>
@@ -437,7 +462,7 @@
         </front>
         <seriesInfo name="W3C Candidate Recommendation" value="CR-secure-contexts"/>
       </reference>
-      
+
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9382.xml"/>
 
       <reference anchor="W3C.OpenScreen" target="https://www.w3.org/TR/openscreen-network/">
