@@ -4,8 +4,8 @@
 
 IOT Operations                                             M. Sweet, Ed.
 Internet-Draft                             Lakeside Robotics Corporation
-Intended status: Experimental                           19 February 2025
-Expires: 23 August 2025
+Intended status: Experimental                              29 March 2025
+Expires: 30 September 2025
 
 
                  ACME-Based Provisioning of IoT Devices
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 August 2025.
+   This Internet-Draft will expire on 30 September 2025.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Sweet                    Expires 23 August 2025                 [Page 1]
+Sweet                   Expires 30 September 2025               [Page 1]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
 Table of Contents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Sweet                    Expires 23 August 2025                 [Page 2]
+Sweet                   Expires 30 September 2025               [Page 2]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
    suited to attestation and secure network connection than direct use
@@ -165,9 +165,9 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                 [Page 3]
+Sweet                   Expires 30 September 2025               [Page 3]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
    ACME defines a protocol for network services to obtain trusted X.509
@@ -221,9 +221,9 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                 [Page 4]
+Sweet                   Expires 30 September 2025               [Page 4]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
    Private Network:  A network that requires some level of authorization
@@ -277,9 +277,9 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                 [Page 5]
+Sweet                   Expires 30 September 2025               [Page 5]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
    1.  Via DHCP Option NNN (ACME Server) when obtaining IPv4/IPv6
@@ -333,9 +333,9 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                 [Page 6]
+Sweet                   Expires 30 September 2025               [Page 6]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
 3.4.2.  Accounts
@@ -389,9 +389,9 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                 [Page 7]
+Sweet                   Expires 30 September 2025               [Page 7]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
 3.5.  Client Device Configuration
@@ -445,9 +445,9 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                 [Page 8]
+Sweet                   Expires 30 September 2025               [Page 8]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
 4.1.  Trusting Local DHCP and DNS Infrastructure
@@ -501,9 +501,9 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                 [Page 9]
+Sweet                   Expires 30 September 2025               [Page 9]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
 4.6.  Use of mDNS
@@ -557,9 +557,9 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                [Page 10]
+Sweet                   Expires 30 September 2025              [Page 10]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
 4.10.  Protection of Certificates and Key Material
@@ -613,9 +613,9 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                [Page 11]
+Sweet                   Expires 30 September 2025              [Page 11]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
    Contact: Michael Sweet
@@ -669,9 +669,9 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                [Page 12]
+Sweet                   Expires 30 September 2025              [Page 12]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
@@ -725,9 +725,9 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                [Page 13]
+Sweet                   Expires 30 September 2025              [Page 13]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
 7.  Informative References
@@ -781,9 +781,9 @@ Appendix A.  Change History
 
 
 
-Sweet                    Expires 23 August 2025                [Page 14]
+Sweet                   Expires 30 September 2025              [Page 14]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
    *  Clarified key material security considerations.
@@ -837,9 +837,9 @@ Author's Address
 
 
 
-Sweet                    Expires 23 August 2025                [Page 15]
+Sweet                   Expires 30 September 2025              [Page 15]
 
-RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
+RFC draft-sweet-iot-acme-0ACME IoT Provisioning               March 2025
 
 
    Michael Sweet (editor)
@@ -893,4 +893,4 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning            February 2025
 
 
 
-Sweet                    Expires 23 August 2025                [Page 16]
+Sweet                   Expires 30 September 2025              [Page 16]
