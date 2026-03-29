@@ -71,7 +71,7 @@
 	<dd>A Cryptographic Identity bound to a Client Device that has been signed by a Trust Anchor.</dd>
 
         <dt>Cryptographic Identity:</dt>
-        <dd>A persistent, cryptographically verifiable identifier, e.g., an X.509 public key infrastructure certificate <xref target="RFC5280">.</dd>
+        <dd>A persistent, cryptographically verifiable identifier, e.g., an X.509 public key infrastructure certificate <xref target="RFC5280"/>.</dd>
 
         <dt>Device:</dt>
         <dd>An entity with a network interface that connects to a local network.</dd>
@@ -323,6 +323,7 @@
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8375.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8446.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9110.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9476.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9525.xml"/>
     </references>
