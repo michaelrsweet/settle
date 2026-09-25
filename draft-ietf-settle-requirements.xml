@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE rfc>
 <?xml-stylesheet type='text/xsl' href='rfc7991.xslt' ?>
-<rfc ipr="trust200902" submissionType="IETF" category="info" version="3" docName="draft-ietf-settle-requirements-02" xmlns:xi="http://www.w3.org/2001/XInclude">
+<rfc ipr="trust200902" submissionType="IETF" category="info" version="3" docName="draft-ietf-settle-requirements-00" xmlns:xi="http://www.w3.org/2001/XInclude">
 
   <front>
     <title abbrev="SETTLE Requirements">SEcure access To Tls Local rEsources (SETTLE) Problem Statement and Requirements</title>
-    <seriesInfo name="Internet-Draft" status="informational" stream="IETF" value="draft-ietf-settle-requirements-02"/>
+    <seriesInfo name="Internet-Draft" status="informational" stream="IETF" value="draft-ietf-settle-requirements-00"/>
 
     <author fullname="Michael Sweet" initials="M." role="editor" surname="Sweet">
       <organization>Lakeside Robotics Corporation</organization>
       <address>
-        <postal>
-          <street>1094 Valecrest St</street>
-          <city>Blezard Valley</city>
-          <region>Ontario</region>
-          <code>P0M 1E0</code>
-          <country>Canada</country>
-        </postal>
-        <email>msweet@msweet.org</email>
+        <email>msweet@lakesiderobotics.ca</email>
       </address>
     </author>
 
@@ -28,7 +21,7 @@
       </address>
     </author>
 
-    <date year="2026" month="February" day="21"/>
+    <date year="2026" month="September" day="25"/>
     <area>Internet</area>
     <workgroup>SETTLE</workgroup>
     <keyword>REQUIREMENTS</keyword>
@@ -48,16 +41,14 @@
 
       <t>Existing deployments of TLS on local networks typically use "self-signed" X.509 certificates that lack the endorsement of a trusted party, relying instead on Trust on First Use (TOFU) mechanisms. Because the client User Agent lacks a cryptographic trust anchor for the local device, it presents a "scary" certificate warning. Users frequently disregard these warnings, leading to warning fatigue and leaving them vulnerable to active interception. Conversely, network devices are unable to determine the trustworthiness of the local network, humorous solutions such as the "evil bit" from <xref target="RFC3514"/> aside.</t>
 
-      <t>This document defines common terminology and requirements for discovering, identifying, validating, and establishing secure connections with local network devices without relying on Trust On First Use (TOFU) or continuous Internet connectivity.</t>
+      <t>This document defines common terminology and requirements for discovering, identifying, validating, and establishing secure connections with local network devices without relying on Trust On First Use (TOFU) or continuous Internet connectivity. Importantly, nothing here will help determine whether a network or network device is actually trustworthy, merely that it possesses a verifiable identity.</t>
     </section>
+
 
     <section title="Terminology">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
 
       <dl>
-        <dt>Secure Context:</dt>
-        <dd>An environment meeting the minimum standards of authentication and confidentiality as defined by the W3C Secure Contexts specification <xref target="W3C.SecureContexts"/>.</dd>
-
         <dt>Bootstrapping:</dt>
         <dd>The process of establishing an initial trust relationship and secure communication channel between a User Agent and a Device where no prior relationship exists.</dd>
 
@@ -100,6 +91,12 @@
         <dt>Out-of-Band (OOB) Ceremony:</dt>
         <dd>A mechanism for transferring trust entropy via a channel physically separate from the network. [MOVE THIS: Different mechanisms offer varying security properties, including QR codes (visual, high entropy), PIN entry (manual, low entropy), Short Authentication Strings (SAS), Near Field Communication (NFC), or Push-Button Configuration (PBC).]</dd>
 
+	<dt>Protected Communications:</dt>
+	<dd>Communications between two Devices whose Identities have been verified and use methods such as cryptography to protect any data from eavesdropping or undetected modification.</dd>
+
+        <dt>Secure Context:</dt>
+        <dd>An environment meeting the minimum standards of authentication and confidentiality as defined by the W3C Secure Contexts specification <xref target="W3C.SecureContexts"/>.</dd>
+
         <dt>Trust Anchor:</dt>
         <dd>A Cryptographic Identity that is trusted by a Client Device and/or UA.</dd>
 
@@ -115,113 +112,62 @@
       </dl>
     </section>
 
-    <section title="Security and Threat Model">
-      <t>The SETTLE architecture operates under the assumption of a Zero-Trust Local Area Network. Trust cannot be spontaneously generated within a channel controlled by an active adversary; it must be introduced from an external source (a Trust Anchor). The threat model includes the following constraints and capabilities:</t>
+
+    <section title="Overview and Goals">
+      <t>SETTLE is concerned with enabling Protected Communications within any Zero-Trust Local Area Network. Protected Communications typically are implemented using of TLS <xref target="RFC9846"/> with X.509 certificates <xref target="RFC5280"/> signed by a known Trust Anchor. Importantly, SETTLE does not deal with the notion of trustworthiness (authentication, authorization, access control, and/or attestation) or Users but instead is focused on the more basic issues of Device Identity verification and the use of a Local Certificate Authority and Trust Anchor to permit local autonomous operation without an active connection to the Internet.</t>
+
+      <t>The goals of SETTLE include:</t>
 
       <ul>
-        <li><strong>Active On-Path Attacker (Dolev-Yao):</strong> The local network is assumed to be hostile. An adversary can intercept, drop, modify, and inject packets. This includes spoofing DNS/mDNS responses and cloning SSIDs to act as a rogue access point (Evil Twin attacks).</li>
-        <li><strong>No Implicit Trust on First Use (TOFU):</strong> Because an active attacker may be present at the moment of initial connection, blind acceptance of a self-signed certificate (TOFU) is cryptographically indistinguishable from accepting an attacker's key. TOFU is explicitly disqualified as a primary bootstrapping mechanism.</li>
-        <li><strong>Compromised Pledges and Supply Chain:</strong> Malicious or compromised devices may attempt to join the network. Furthermore, while manufacturer-installed certificates (IDevID) provide a hardware root of trust, the supply chain itself may experience private key leakage, necessitating constrained scoping of manufacturer trust.</li>
-        <li><strong>Intermittent Connectivity:</strong> The solution MUST NOT fail closed if the local network is disconnected from the broader Internet. Devices must be able to securely pair and communicate in an air-gapped or offline environment.</li>
-        <li><strong>Supply Chain Variability:</strong> While some devices will possess IDevIDs, the architecture must accommodate "self-hosted" devices built on generic computing hardware (where no single supply chain authority exists).</li>
-      </ul>
-
-      <t>Because global PKI is unsuited for local names, and TOFU provides no active-attacker protection, a Secure Context requires either a rigorous pre-installed root (which fails for generic hardware) or the physical User to mediate the initial trust binding via an Out-of-Band (OOB) Ceremony.</t>
-    </section>
-
-    <section title="Problem Statement and Formal Derivation">
-      <t>The core challenge of securing local network communications stems from the disconnect between the global Web PKI and local network topologies. Securing an HTTPS connection requires clearing three hurdles:</t>
-
-      <ol>
-        <li><em>Resolution:</em> The identifier provided by the user or discovered on the network must translate to an IP address.</li>
-        <li><em>Identity Binding:</em> The certificate presented by the target must correspond to the requested name.</li>
-        <li><em>Trust Anchor Validation:</em> The certificate must be cryptographically signed by a trust anchor recognized by the client.</li>
-      </ol>
-
-      <t>On the public Internet, these are solved via global DNS, Web PKI, and browser-bundled Root CAs. On a local network, devices reside behind NAT, use non-routable IP addresses (e.g., <xref target="RFC3927"/>, <xref target="RFC4193"/>), lack delegated public domain names, and face address-space ambiguity (e.g., CGNAT 100.64.0.0/10 spaces being treated as public by some parsers and private by others).</t>
-
-      <t>This represents an application of Zooko's Triangle <xref target="ZookosTriangle"/>: naming systems struggle to be simultaneously Human-meaningful, Secure, and Decentralized. To solve this, SETTLE must bypass the following flawed approaches:</t>
-
-      <ul>
-        <li><em>The Cloud/Dynamic DNS Workaround (e.g., Plex Model):</em> Approaches using dynamic DNS to map local IPs to global subdomains paired with wildcard certificates require persistent Internet connectivity, external infrastructure, and fail completely in air-gapped environments. They also leak local topologies to global DNS.</li>
-        <li><em>Manufacturer-Only Trust:</em> Relying solely on manufacturer-installed certificates (IDevID) creates a "naming disconnect" (the cert binds a key to a serial number, not a local name like "printer.local"). Furthermore, it excludes "self-hosted" software running on generic hardware.</li>
-        <li><em>Trust On First Use (TOFU):</em> As established in the Threat Model, TOFU automates vulnerability rather than solving warning fatigue.</li>
-      </ul>
-
-      <t><strong>Conclusion:</strong> To establish Secure Contexts without Cloud or Manufacturer-only infrastructure, the system must utilize the User to mediate trust via an OOB Ceremony. Consequently, User Agents MUST possess a mechanism to ingest and store these user-verified roots in a dynamic local trust store (S_Local).</t>
-    </section>
-
-    <section title="Prior Art and Related Work">
-      <t>The SETTLE architecture builds upon and differentiates itself from several existing approaches:</t>
-
-      <ul>
-        <li><strong>BRSKI and BRSKI-PRM:</strong> Bootstrapping Remote Secure Key Infrastructure <xref target="RFC8995"/> automates provisioning using manufacturer IDevIDs. BRSKI-PRM <xref target="I-D.ietf-anima-brski-prm"/> demonstrates the value of <em>object security</em> (signed Vouchers) over transport security for environments where pledges cannot initiate TLS connections. While powerful, BRSKI requires a supply chain root of trust, which is absent in self-hosted consumer scenarios.</li>
-        <li><strong>Matter Protocol:</strong> Matter utilizes Password-Authenticated Session Establishment (PASE) <xref target="Matter"/> for onboarding. However, security analyses have highlighted flaws including low-entropy (27-bit) passcodes and static salts, emphasizing the need for higher entropy in OOB ceremonies.</li>
-        <li><strong>Wi-Fi Easy Connect (DPP):</strong> Uses QR codes containing public keys to bootstrap WPA3 credentials <xref target="DPP"/>. This provides a strong precedent for OOB ceremonies, though it targets network-layer access rather than application-layer TLS identity.</li>
-        <li><strong>Open Screen Protocol:</strong> The W3C Open Screen Network Protocol <xref target="W3C.OpenScreen"/> provides a particularly clean construction for local device pairing without pre-shared keys. Devices establish a provisional QUIC/TLS connection using self-signed certificates, then authenticate it via SPAKE2 <xref target="RFC9382"/> bound to a user-transferred PIN. This pattern of "connect first, authenticate via PAKE second" is directly applicable to SETTLE's Track A. Emerging IETF work on integrating PAKEs directly into TLS 1.3 <xref target="I-D.ietf-tls-pake"/> may provide a standardized transport for this class of bootstrapping.</li>
-        <li><strong>AirDrop / PrivateDrop:</strong> Traditional local discovery using truncated hashes leaks user identifiers. Research into Private Set Intersection (PSI) <xref target="PrivateDrop"/> demonstrates that privacy-preserving mutual discovery is feasible with sub-second latency.</li>
-        <li><strong>SDSI/SPKI:</strong> Simple Distributed Security Infrastructure <xref target="RFC2693"/> proposed a decentralized PKI binding authorizations directly to keys. While conceptually aligned with local trust, modern web browsers mandate X.509 <xref target="RFC5280"/> for compatibility.</li>
-        <li><strong>Local Public Key Hashes:</strong> Approaches that embed public key hashes into local domain names <xref target="I-D.wing-settle-public-key-hash"/> offer self-certifying namespaces but sacrifice human-readability.</li>
-        <li><strong>Local Referees and ACME:</strong> Architectures utilizing a central local hub to authenticate servers <xref target="I-D.wing-settle-referee"/> or issue certificates via a local ACME server <xref target="I-D.sweet-iot-acme"/> optimize UX but require initial bootstrapping of the Referee itself.</li>
+        <li><strong>Autonomous/Semi-Autonomous Operation:</strong> Allow Devices to connect and obtain credentials automatically whenever possible.</li>
+        <li><strong>Common Connection/Policy Support:</strong>: Make it possible for Devices to better adapt and participate on LANs with different capabilities and/or policies, particularly home vs. enterprise networks.</li>
+        <li><strong>Improved Security:</strong> Eliminate the use of TOFU policies for IoT Devices by using X.509 certificates that are signed by a Local Trust Anchor.</li>
+        <li><strong>Improved User Experience:</strong> Enable normal HTTPS access to Devices such as cameras, printers, routers, etc. using a standard User Agent such as a web browser.</li>
+        <li><strong>Standalone Operation:</strong> Do not require an Internet connection to function. Obviously there could be cloud/distributed/managed solutions but the core architecture/protocols do not require it.</li>
       </ul>
     </section>
 
-    <section title="Operational Tracks">
-      <t>To prevent circular dependencies, SETTLE requirements are organized into two composable tracks. Implementers may choose the track appropriate for their ecosystem.</t>
-
-      <section title="Track A: Direct Peer Bootstrapping">
-        <t>This track addresses the bootstrapping of a single link between a UA and a Target when shared trust is initially zero. It relies on an Out-of-Band (OOB) Ceremony (e.g., scanning a QR code as in DPP <xref target="DPP"/>) to transfer trust entropy and establish a mutual Trust Anchor directly. This track may use transport security (e.g., Bootstrapped TLS <xref target="I-D.ietf-emu-bootstrapped-tls"/>) or object security (e.g., signed payloads). A promising pattern is to establish a provisional TLS connection using self-signed certificates, then authenticate it via a Password-Authenticated Key Exchange (PAKE) such as SPAKE2 <xref target="RFC9382"/> bound to the OOB secret, as demonstrated by the Open Screen Protocol <xref target="W3C.OpenScreen"/>. Separately, <xref target="I-D.ietf-tls-pake"/> proposes native TLS 1.3 support for PAKE-based authentication, reflecting broader interest in standardizing PAKE mechanisms at the transport layer. This track is optimized for ad-hoc connections and generic hardware, bridging the gap without relying on any intermediaries.</t>
-      </section>
-
-      <section title="Track B: Scaled Trust via Referee">
-        <t>To avoid the user friction of performing manual OOB Ceremonies for every device, this track introduces a trusted local intermediary (a Referee <xref target="I-D.wing-settle-referee"/>). The user bootstraps trust with the Referee (via Track A). The Referee subsequently acts as a local Certificate Authority (e.g., using ACME <xref target="RFC8555"/>, <xref target="I-D.sweet-iot-acme"/> or EST <xref target="RFC7030"/>) to issue credentials to other Infrastructure Devices. The UA inherently trusts the network via its binding to the Referee.</t>
-      </section>
-    </section>
 
     <section title="Requirements">
-
       <section title="Naming and Discovery (REQ-NAME)">
         <dl>
           <dt>REQ-NAME-01: Unique Identifiers</dt>
-          <dd>The system MUST provide a mechanism to assign unique names to local devices. To prevent collisions, names SHOULD incorporate high-entropy device-specific data, such as MAC addresses <xref target="I-D.housley-lamps-macaddress-on"/> or public key hashes <xref target="I-D.wing-settle-public-key-hash"/>.</dd>
+          <dd>SETTLE MUST provide a mechanism to assign unique Device Names. To prevent collisions, names SHOULD incorporate high-entropy device-specific data, such as MAC addresses <xref target="I-D.housley-lamps-macaddress-on"/> or public key hashes <xref target="I-D.wing-settle-public-key-hash"/>.</dd>
 
           <dt>REQ-NAME-02: Local Namespace Compatibility</dt>
-          <dd>Local device names MUST utilize standardized namespaces reserved for local or non-DNS use to ensure broad client support. Valid namespaces include ".local" for mDNS <xref target="RFC6762"/>, "home.arpa." for unicast DNS <xref target="RFC8375"/>, or ".alt" <xref target="RFC9476"/>.</dd>
+          <dd>Device Names MUST utilize standardized namespaces reserved for local or non-DNS use to ensure broad client support. Valid namespaces include ".local" for mDNS <xref target="RFC6762"/>, "home.arpa." for unicast DNS <xref target="RFC8375"/>, or ".alt" <xref target="RFC9476"/>.</dd>
 
           <dt>REQ-NAME-03: Independence from Global DNS</dt>
-          <dd>Name resolution MUST NOT depend on the availability of global DNS infrastructure.</dd>
+          <dd>Device Name resolution MUST NOT depend on the availability of global DNS infrastructure.</dd>
 
           <dt>REQ-NAME-04: Standardized Discovery</dt>
-          <dd>The system MUST utilize standard local discovery protocols, such as DNS-Based Service Discovery (DNS-SD) <xref target="RFC6763"/> or Captive Portal APIs <xref target="RFC8910"/>, to locate devices prior to authentication.</dd>
+          <dd>SETTLE MUST utilize standard local discovery protocols, such as DNS-Based Service Discovery (DNS-SD) <xref target="RFC6763"/> or Captive Portal APIs <xref target="RFC8910"/>, to locate Devices prior to authentication.</dd>
 
           <dt>REQ-NAME-05: Privacy-Preserving Discovery</dt>
-          <dd>The discovery mechanism MUST prevent passive tracking of devices or users. The system MUST NOT broadcast static identifiers (like MAC addresses or static account hashes) in plaintext if the device is portable. Systems SHOULD utilize rotating identifiers or cryptographic mechanisms like Private Set Intersection (PSI).</dd>
+          <dd>The discovery mechanism MUST prevent passive tracking of Devices or Users. SETTLE MUST NOT broadcast static identifiers (like MAC addresses or static account hashes) in plaintext if the Device is portable. SETTLE SHOULD utilize rotating identifiers or cryptographic mechanisms like Private Set Intersection (PSI).</dd>
         </dl>
       </section>
 
-      <section title="Trust and Bootstrapping (REQ-TRUST)">
+      <section title="Verification and Bootstrapping (REQ-VERIFY)">
         <dl>
-          <dt>REQ-TRUST-01: Rejection of Network TOFU</dt>
-          <dd>The architecture MUST NOT rely on Trust On First Use (TOFU) executed exclusively over the local network interface for initial authentication.</dd>
+          <dt>REQ-VERIFY-01: Rejection of Network TOFU</dt>
+          <dd>SETTLE MUST NOT rely on automatic Trust On First Use (TOFU) executed exclusively over the local network interface for initial authentication.</dd>
 
-          <dt>REQ-TRUST-02: Out-of-Band (OOB) Ceremony</dt>
-          <dd>The system MUST define or profile an OOB mechanism to transfer trust entropy. The OOB material MUST provide at least 128 bits of entropy to resist offline dictionary and GPU brute-force attacks.</dd>
+          <dt>REQ-VERIFY-02: Out-of-Band (OOB) Ceremony</dt>
+          <dd>SETTLE MUST define or profile an OOB mechanism to transfer verification entropy when a suitable Device Identity is not available. The OOB material MUST provide at least 128 bits of entropy to resist offline attacks.</dd>
 
-          <dt>REQ-TRUST-03: Pre-Installed Trust Optimization</dt>
-          <dd>The system SHOULD support the use of manufacturer-installed certificates (e.g., IDevID <xref target="IEEE.802.1AR"/>, <xref target="I-D.irtf-t2trg-taxonomy-manufacturer-anchors"/>). When used, the system MUST define a mechanism (e.g., Vouchers <xref target="RFC8366"/>) to cryptographically bind the manufacturer-provided identity to the user-facing Local Device Name. This mechanism MUST NOT be the only method supported.</dd>
+          <dt>REQ-VERIFY-03: Pre-Installed Identity Optimization</dt>
+          <dd>SETTLE SHOULD support the use of manufacturer-installed certificates (e.g., IDevID <xref target="IEEE.802.1AR"/>, <xref target="I-D.irtf-t2trg-taxonomy-manufacturer-anchors"/>). When used, SETTLE MUST define a mechanism (e.g., Vouchers <xref target="RFC8366"/>) to cryptographically bind the manufacturer-provided identity to the user-facing Device Name.</dd>
 
-          <dt>REQ-TRUST-04: Dynamic Local Trust Store</dt>
-          <dd>User Agents MUST implement a scoped, dynamic trust store capable of ingesting and persisting Trust Anchors generated or verified via OOB Ceremonies, independent of the OS-level global PKI trust store.</dd>
-
-          <dt>REQ-TRUST-05: Mutual Authentication</dt>
-          <dd>The bootstrapping protocol MUST support mutual authentication, allowing both the User Agent to verify the Target, and the Target to verify the authorization of the User Agent connecting to it.</dd>
+          <dt>REQ-VERIFY-04: Dynamic Local Trust Store</dt>
+          <dd>User Agents MUST support a Local Trust Anchor.</dd>
         </dl>
       </section>
 
       <section title="Protocol and Transport (REQ-TRANS)">
         <dl>
           <dt>REQ-TRANS-01: Modern Transport Security</dt>
-          <dd>All communications requiring a secure context MUST utilize TLS 1.3 <xref target="RFC8446"/> or equivalent modern transport security protocols.</dd>
+          <dd>All communications requiring a secure context MUST utilize TLS 1.3 <xref target="RFC9846"/> or equivalent modern transport security protocols.</dd>
 
           <dt>REQ-TRANS-02: Implicit TLS Preference</dt>
           <dd>To minimize downgrade attacks, the system SHOULD utilize Implicit TLS (connect-then-handshake) rather than connection-upgrade mechanisms (e.g., STARTTLS) <xref target="RFC8314"/>.</dd>
@@ -230,46 +176,34 @@
           <dd>Device certificates MUST populate the Subject Alternative Name (SAN) extension. User Agents MUST verify these identities in accordance with <xref target="RFC9525"/> and IoT TLS profiles <xref target="I-D.ietf-uta-tls13-iot-profile"/>.</dd>
 
           <dt>REQ-TRANS-04: Browser Policy Compatibility</dt>
-          <dd>The protocol MUST integrate seamlessly with browser Local Network Access (LNA) policies. Devices MUST be capable of serving verifiable certificates to answer preflights, enabling transparent authorization and minimizing unnecessary user friction.</dd>
+          <dd>SETTLE MUST integrate seamlessly with browser Local Network Access (LNA) policies. Devices MUST be capable of serving verifiable certificates to answer preflights, enabling transparent authorization and minimizing unnecessary user friction.</dd>
 
           <dt>REQ-TRANS-05: Interoperability and Agility</dt>
-          <dd>The protocols chosen MUST support cryptographic agility to accommodate future algorithm deprecations and ensure interoperability between independent vendor implementations.</dd>
+          <dd>SETTLE MUST support cryptographic agility to accommodate future algorithm deprecations and ensure interoperability between independent vendor implementations.</dd>
         </dl>
       </section>
 
       <section title="Architecture and Management (REQ-ARCH)">
         <dl>
           <dt>REQ-ARCH-01: Standalone Operation</dt>
-          <dd>The system MUST operate securely without requiring Internet connectivity.</dd>
+          <dd>SETTLE MUST operate securely without requiring Internet connectivity.</dd>
 
           <dt>REQ-ARCH-02: Referee / Delegation Support</dt>
-          <dd>The system MUST support a hierarchical local trust model (Track B) where a mutually authenticated Referee can issue credentials to other local devices.</dd>
+          <dd>SETTLE MUST support a hierarchical local trust model where a mutually authenticated Referee can issue credentials to Devices.</dd>
 
           <dt>REQ-ARCH-03: Device Lifecycle and Key Rotation</dt>
-          <dd>The system MUST provide mechanisms for routine key rotation, certificate renewal without user intervention, and trust revocation. A factory reset of a Device MUST cryptographically invalidate and purge all prior local trust bindings.</dd>
-
-          <dt>REQ-ARCH-04a: Authorization</dt>
-          <dd>The system MUST provide mechanisms to explicitly authorize clients for specific roles (e.g., administrator vs. guest), preventing unauthorized configuration changes.</dd>
-
-          <dt>REQ-ARCH-04b: Audit and Transparency</dt>
-          <dd>Devices SHOULD provide a standard API allowing authorized controllers to audit all active trust bindings and access control lists to prevent "hidden" administrative fabrics.</dd>
-
-          <dt>REQ-ARCH-05: User Consent</dt>
-          <dd>User Agents and Referees MUST clearly present trust decisions to the user, ensuring the user is actively aware of which devices are trusted.</dd>
+          <dd>SETTLE MUST provide mechanisms for routine key rotation, certificate renewal without user intervention, and trust revocation. A factory reset of a Device MUST cryptographically invalidate and purge all prior local trust bindings.</dd>
         </dl>
       </section>
-
     </section>
 
     <section title="Security Considerations">
-      <t>The SETTLE architecture assumes a hostile local network. The following threats must be mitigated by compliant implementations.</t>
-
       <section title="Evil Twin and Network Impersonation">
         <t>An attacker may clone a local Wi-Fi access point (Evil Twin), spoof BSSIDs, or poison mDNS caches to redirect traffic to a malicious endpoint. Because SETTLE mandates an OOB Ceremony (REQ-TRUST-02) and rejects pure TOFU, the UA will detect the certificate mismatch and abort the connection, neutralizing the impersonation.</t>
       </section>
 
       <section title="Compromise of the Referee">
-        <t>In Track B deployments, the Referee acts as the root of trust for the local network. If the Referee is compromised, the attacker can issue trusted certificates for any name within the local namespace, enabling widespread MITM attacks against the UA. Referees MUST be implemented on hardened devices with minimal external attack surfaces, and clients SHOULD scope Referee trust to the explicit local namespace.</t>
+        <t>The Referee acts as the root of trust for the local network. If the Referee is compromised, the attacker can issue trusted certificates for any name within the local namespace, enabling widespread MITM attacks against the UA. Clients SHOULD scope Referee trust to the explicit local namespace.</t>
       </section>
 
       <section title="Social Engineering and Support Scams">
@@ -277,7 +211,7 @@
       </section>
 
       <section title="Confused Deputy Attacks">
-        <t>Public websites often attempt to use the browser as a "confused deputy" to attack local network devices via Cross-Site Request Forgery (CSRF). SETTLE's requirement for mutual authentication (REQ-TRUST-05) and compatibility with Local Network Access (LNA) policies (REQ-TRANS-04) ensures devices reject unauthenticated cross-origin requests.</t>
+        <t>Public websites often attempt to use the browser as a "confused deputy" to attack local network devices via Cross-Site Request Forgery (CSRF). SETTLE's requirement for compatibility with Local Network Access (LNA) policies (REQ-TRANS-04) ensures devices reject unauthenticated cross-origin requests.</t>
       </section>
 
       <section title="Factory Reset Incompleteness">
@@ -286,10 +220,6 @@
 
       <section title="Supply Chain Attacks">
         <t>When utilizing Pre-Installed Trust (IDevID), a compromised manufacturer or stolen batch of private keys allows an attacker to masquerade as a legitimate device. UAs SHOULD support mechanisms to constrain manufacturer trust to specific scopes or require secondary local validation.</t>
-      </section>
-
-      <section title="OS Isolation of DHCP Configuration">
-        <t>While DHCP options exist to distribute network configurations, modern operating systems actively isolate DHCP-provided data from User Agents (browsers) to prevent rogue DHCP servers from injecting malicious trust anchors. Consequently, SETTLE cannot rely on DHCP for the distribution of Trust Anchors to User Agents, reinforcing the need for OOB or application-layer bootstrapping.</t>
       </section>
 
       <section title="Denial of Service">
@@ -322,10 +252,10 @@
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6763.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8375.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8446.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9110.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9476.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9525.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9846.xml"/>
     </references>
 
     <references title="Informative References">
@@ -494,31 +424,28 @@
       </reference>
     </references>
 
+
+    <section title="Prior Art and Related Work">
+      <t>The SETTLE architecture builds upon and differentiates itself from several existing approaches:</t>
+
+      <ul>
+        <li><strong>BRSKI and BRSKI-PRM:</strong> Bootstrapping Remote Secure Key Infrastructure <xref target="RFC8995"/> automates provisioning using manufacturer IDevIDs. BRSKI-PRM <xref target="I-D.ietf-anima-brski-prm"/> demonstrates the value of <em>object security</em> (signed Vouchers) over transport security for environments where pledges cannot initiate TLS connections. While powerful, BRSKI requires a supply chain root of trust, which is absent in self-hosted consumer scenarios.</li>
+        <li><strong>Matter Protocol:</strong> Matter utilizes Password-Authenticated Session Establishment (PASE) <xref target="Matter"/> for onboarding. However, security analyses have highlighted flaws including low-entropy (27-bit) passcodes and static salts, emphasizing the need for higher entropy in OOB ceremonies.</li>
+        <li><strong>Wi-Fi Easy Connect (DPP):</strong> Uses QR codes containing public keys to bootstrap WPA3 credentials <xref target="DPP"/>. This provides a strong precedent for OOB ceremonies, though it targets network-layer access rather than application-layer TLS identity.</li>
+        <li><strong>Open Screen Protocol:</strong> The W3C Open Screen Network Protocol <xref target="W3C.OpenScreen"/> provides a particularly clean construction for local device pairing without pre-shared keys. Devices establish a provisional QUIC/TLS connection using self-signed certificates, then authenticate it via SPAKE2 <xref target="RFC9382"/> bound to a user-transferred PIN. This pattern of "connect first, authenticate via PAKE second" is directly applicable to SETTLE's Track A. Emerging IETF work on integrating PAKEs directly into TLS 1.3 <xref target="I-D.ietf-tls-pake"/> may provide a standardized transport for this class of bootstrapping.</li>
+        <li><strong>AirDrop / PrivateDrop:</strong> Traditional local discovery using truncated hashes leaks user identifiers. Research into Private Set Intersection (PSI) <xref target="PrivateDrop"/> demonstrates that privacy-preserving mutual discovery is feasible with sub-second latency.</li>
+        <li><strong>SDSI/SPKI:</strong> Simple Distributed Security Infrastructure <xref target="RFC2693"/> proposed a decentralized PKI binding authorizations directly to keys. While conceptually aligned with local trust, modern web browsers mandate X.509 <xref target="RFC5280"/> for compatibility.</li>
+        <li><strong>Local Public Key Hashes:</strong> Approaches that embed public key hashes into local domain names <xref target="I-D.wing-settle-public-key-hash"/> offer self-certifying namespaces but sacrifice human-readability.</li>
+        <li><strong>Local Referees and ACME:</strong> Architectures utilizing a central local hub to authenticate servers <xref target="I-D.wing-settle-referee"/> or issue certificates via a local ACME server <xref target="I-D.sweet-iot-acme"/> optimize UX but require initial bootstrapping of the Referee itself.</li>
+      </ul>
+    </section>
+
+
     <section title="Change History">
       <t>[ RFC Editor: This section to be deleted before RFC publication ]</t>
-      <t>February 21, 2026 - draft-ietf-settle-requirements-02</t>
+      <t>September 25, 2026 - draft-ietf-settle-requirements-00</t>
       <ul>
-        <li>Restored explicit Threat Model section incorporating Dolev-Yao attacker capabilities.</li>
-        <li>Restored "Referee compromise" clause in Security Considerations.</li>
-        <li>Cleaned up dangling references (RFC 3514, RFC 8366, RFC 8799, RFC 8910) by citing them appropriately in text.</li>
-        <li>Added references to IEEE 802.1AR and multiple I-Ds (draft-wing-settle-referee, draft-sweet-iot-acme, draft-ietf-anima-brski-prm, etc.).</li>
-        <li>Hardened REQ-TRUST-02 (entropy floor set to "at least 128 bits" instead of "e.g.").</li>
-        <li>Upgraded REQ-TRUST-04 from SHOULD to MUST.</li>
-        <li>Refined REQ-TRANS-04 wording for neutrality.</li>
-        <li>Split REQ-ARCH-04 into separate Authorization and Audit requirements.</li>
-        <li>Added a dedicated Privacy Considerations section per RFC 6973.</li>
-        <li>Acknowledged object-security as an alternative to transport-security in the Bootstrapping/Track A descriptions.</li>
-        <li>Referenced CGNAT ambiguity and added explicit scoping against DHCP-based trust anchor distribution.</li>
-      </ul>
-      <t>February 21, 2026 - draft-ietf-settle-requirements-01</t>
-      <ul>
-        <li>Introduced formal derivation of trust requirements.</li>
-        <li>Added Prior Art / Related Work section.</li>
-        <li>Greatly expanded requirement coverage (discovery, mutual auth, LNA compatibility, etc.).</li>
-      </ul>
-      <t>Early 2026 - draft-ietf-settle-requirements-00</t>
-      <ul>
-        <li>Initial revision based on SETTLE charter, WG mailing list consensus, and architectural analysis of local network trust constraints.</li>
+        <li>Initial revision.</li>
       </ul>
     </section>
   </back>
