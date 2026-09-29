@@ -4,8 +4,8 @@
 
 IOT Operations                                             M. Sweet, Ed.
 Internet-Draft                             Lakeside Robotics Corporation
-Intended status: Experimental                          25 September 2025
-Expires: 29 March 2026
+Intended status: Experimental                          29 September 2025
+Expires: 2 April 2026
 
 
                  ACME-Based Provisioning of IoT Devices
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 March 2026.
+   This Internet-Draft will expire on 2 April 2026.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Sweet                     Expires 29 March 2026                 [Page 1]
+Sweet                     Expires 2 April 2026                  [Page 1]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Sweet                     Expires 29 March 2026                 [Page 2]
+Sweet                     Expires 2 April 2026                  [Page 2]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -165,7 +165,7 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                 [Page 3]
+Sweet                     Expires 2 April 2026                  [Page 3]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -221,7 +221,7 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                 [Page 4]
+Sweet                     Expires 2 April 2026                  [Page 4]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -277,7 +277,7 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                 [Page 5]
+Sweet                     Expires 2 April 2026                  [Page 5]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -333,7 +333,7 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                 [Page 6]
+Sweet                     Expires 2 April 2026                  [Page 6]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -389,7 +389,7 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                 [Page 7]
+Sweet                     Expires 2 April 2026                  [Page 7]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -445,7 +445,7 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                 [Page 8]
+Sweet                     Expires 2 April 2026                  [Page 8]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -501,7 +501,7 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                 [Page 9]
+Sweet                     Expires 2 April 2026                  [Page 9]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -557,7 +557,7 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                [Page 10]
+Sweet                     Expires 2 April 2026                 [Page 10]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -613,7 +613,7 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                [Page 11]
+Sweet                     Expires 2 April 2026                 [Page 11]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -669,7 +669,7 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                [Page 12]
+Sweet                     Expires 2 April 2026                 [Page 12]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -725,7 +725,7 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                [Page 13]
+Sweet                     Expires 2 April 2026                 [Page 13]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -781,7 +781,7 @@ Appendix A.  Change History
 
 
 
-Sweet                     Expires 29 March 2026                [Page 14]
+Sweet                     Expires 2 April 2026                 [Page 14]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -837,7 +837,7 @@ Author's Address
 
 
 
-Sweet                     Expires 29 March 2026                [Page 15]
+Sweet                     Expires 2 April 2026                 [Page 15]
 
 RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
@@ -893,4 +893,4 @@ RFC draft-sweet-iot-acme-0ACME IoT Provisioning           September 2025
 
 
 
-Sweet                     Expires 29 March 2026                [Page 16]
+Sweet                     Expires 2 April 2026                 [Page 16]

@@ -18,7 +18,7 @@
 <!-- Generator version information:
   xml2rfc 3.34.1
     Python 3.12.3
-    ConfigArgParse 1.7.7
+    ConfigArgParse 1.8.0
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.2
@@ -1230,7 +1230,7 @@ li > p:last-of-type:only-child {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Sweet &amp; De Backker</td>
-<td class="center">Expires 29 March 2027</td>
+<td class="center">Expires 2 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1243,12 +1243,12 @@ li > p:last-of-type:only-child {
 <dd class="internet-draft">draft-ietf-settle-requirements-00</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-09-25" class="published">25 September 2026</time>
+<time datetime="2026-09-29" class="published">29 September 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-03-29">29 March 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-02">2 April 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1287,7 +1287,7 @@ li > p:last-of-type:only-child {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 29 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 2 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1494,7 +1494,7 @@ li > p:last-of-type:only-child {
       <h2 id="name-overview-and-goals">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-overview-and-goals" class="section-name selfRef">Overview and Goals</a>
       </h2>
-<p id="section-3-1">SETTLE is concerned with enabling Protected Communications within any Zero-Trust Local Area Network. Protected Communications typically are implemented using of TLS <span>[<a href="#RFC9846" class="cite xref">RFC9846</a>]</span> with X.509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> signed by a known Trust Anchor. Importantly, SETTLE does not deal with the notion of trustworthiness (authentication, authorization, access control, and/or attestation) or Users but instead is focused on the more basic issues of Device Identity verification and the use of a Local Certificate Authority and Trust Anchor to permit local autonomous operation without an active connection to the Internet.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">SEcure access To Tls Local rEsources (SETTLE) <span>[<a href="#SETTLE" class="cite xref">SETTLE</a>]</span> is concerned with enabling Protected Communications within any Zero-Trust Local Area Network. Protected Communications typically are implemented using of TLS <span>[<a href="#RFC9846" class="cite xref">RFC9846</a>]</span> with X.509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> signed by a known Trust Anchor. Importantly, SETTLE does not deal with the notion of trustworthiness (authentication, authorization, access control, and/or attestation) or Users but instead is focused on the more basic issues of Device Identity verification and the use of a Local Certificate Authority and Trust Anchor to permit local autonomous operation without an active connection to the Internet.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">The goals of SETTLE include:<a href="#section-3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-3.1">
@@ -1737,6 +1737,58 @@ li > p:last-of-type:only-child {
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
       </h2>
 <dl class="references">
+<dt id="DPP">[DPP]</dt>
+      <dd>
+<span class="refAuthor">Wi-Fi Alliance</span>, <span class="refTitle">"Device Provisioning Protocol Specification, Version 3.0"</span>, <time datetime="2023" class="refDate">2023</time>, <span>&lt;<a href="https://www.wi-fi.org/discover-wi-fi/wi-fi-easy-connect">https://www.wi-fi.org/discover-wi-fi/wi-fi-easy-connect</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.housley-lamps-macaddress-on">[I-D.housley-lamps-macaddress-on]</dt>
+      <dd>
+<span class="refAuthor">Housley, R.</span>, <span class="refTitle">"MAC Address in X.509 Certificate otherName"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-housley-lamps-macaddress-on</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-housley-lamps-macaddress-on">https://datatracker.ietf.org/doc/html/draft-housley-lamps-macaddress-on</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-anima-brski-prm">[I-D.ietf-anima-brski-prm]</dt>
+      <dd>
+<span class="refAuthor">Fries, S.</span>, <span class="refAuthor">Werner, T.</span>, <span class="refAuthor">Lear, E.</span>, and <span class="refAuthor">M. Richardson</span>, <span class="refTitle">"BRSKI with Pledge in Responder Mode (BRSKI-PRM)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-anima-brski-prm-23</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-anima-brski-prm">https://datatracker.ietf.org/doc/html/draft-ietf-anima-brski-prm</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-emu-bootstrapped-tls">[I-D.ietf-emu-bootstrapped-tls]</dt>
+      <dd>
+<span class="refAuthor">Friel, O.</span> and <span class="refAuthor">D. Harkins</span>, <span class="refTitle">"Bootstrapped TLS Authentication with Proof of Knowledge"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-emu-bootstrapped-tls-07</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-emu-bootstrapped-tls">https://datatracker.ietf.org/doc/html/draft-ietf-emu-bootstrapped-tls</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-tls-pake">[I-D.ietf-tls-pake]</dt>
+      <dd>
+<span class="refAuthor">Hoyland, J.</span> and <span class="refAuthor">O. Friel</span>, <span class="refTitle">"TLS 1.3 Extension for Password-Authenticated Key Exchange"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-tls-pake-00</span>, <time datetime="2025-09" class="refDate">September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-tls-pake">https://datatracker.ietf.org/doc/html/draft-ietf-tls-pake</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-uta-tls13-iot-profile">[I-D.ietf-uta-tls13-iot-profile]</dt>
+      <dd>
+<span class="refAuthor">Fossati, T.</span> and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"TLS/DTLS 1.3 Profiles for the Internet of Things"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-uta-tls13-iot-profile-11</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-uta-tls13-iot-profile">https://datatracker.ietf.org/doc/html/draft-ietf-uta-tls13-iot-profile</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.irtf-t2trg-taxonomy-manufacturer-anchors">[I-D.irtf-t2trg-taxonomy-manufacturer-anchors]</dt>
+      <dd>
+<span class="refAuthor">Richardson, M.</span>, <span class="refTitle">"Taxonomy of Manufacturer-Installed Trust Anchors"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-irtf-t2trg-taxonomy-manufacturer-anchors</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-taxonomy-manufacturer-anchors">https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-taxonomy-manufacturer-anchors</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.sweet-iot-acme">[I-D.sweet-iot-acme]</dt>
+      <dd>
+<span class="refAuthor">Sweet, M.</span>, <span class="refTitle">"ACME-Based Provisioning of IoT Devices"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-sweet-iot-acme-07</span>, <time datetime="2025-02" class="refDate">February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-sweet-iot-acme">https://datatracker.ietf.org/doc/html/draft-sweet-iot-acme</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.wing-settle-public-key-hash">[I-D.wing-settle-public-key-hash]</dt>
+      <dd>
+<span class="refAuthor">Wing, D.</span>, <span class="refTitle">"Public Key Hash for Local Domains"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-wing-settle-public-key-hash-01</span>, <time datetime="2025" class="refDate">2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-wing-settle-public-key-hash">https://datatracker.ietf.org/doc/html/draft-wing-settle-public-key-hash</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.wing-settle-referee">[I-D.wing-settle-referee]</dt>
+      <dd>
+<span class="refAuthor">Wing, D.</span>, <span class="refTitle">"A Referee to Authenticate Servers in Local Domains"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-wing-settle-referee-00</span>, <time datetime="2025-01" class="refDate">January 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-wing-settle-referee">https://datatracker.ietf.org/doc/html/draft-wing-settle-referee</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IEEE.802.1AR">[IEEE.802.1AR]</dt>
+      <dd>
+<span class="refAuthor">IEEE</span>, <span class="refTitle">"IEEE Standard for Local and Metropolitan Area Networks - Secure Device Identity"</span>, <span class="seriesInfo">IEEE 802.1AR-2018</span>, <time datetime="2018" class="refDate">2018</time>, <span>&lt;<a href="https://standards.ieee.org/ieee/802.1AR/7436/">https://standards.ieee.org/ieee/802.1AR/7436/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Matter">[Matter]</dt>
+      <dd>
+<span class="refAuthor">Connectivity Standards Alliance</span>, <span class="refTitle">"Matter Specification, Version 1.4"</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://csa-iot.org/all-solutions/matter/">https://csa-iot.org/all-solutions/matter/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="PrivateDrop">[PrivateDrop]</dt>
+      <dd>
+<span class="refAuthor">Heinrich, A.</span>, <span class="refAuthor">Hollick, M.</span>, <span class="refAuthor">Schneider, T.</span>, <span class="refAuthor">Stute, M.</span>, and <span class="refAuthor">C. Weinert</span>, <span class="refTitle">"PrivateDrop: Practical Privacy-Preserving Authentication for Apple AirDrop"</span>, <span class="seriesInfo">USENIX Security 2021</span>, <time datetime="2021-08" class="refDate">August 2021</time>, <span>&lt;<a href="https://www.usenix.org/conference/usenixsecurity21/presentation/heinrich">https://www.usenix.org/conference/usenixsecurity21/presentation/heinrich</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2693">[RFC2693]</dt>
       <dd>
 <span class="refAuthor">Ellison, C.</span>, <span class="refAuthor">Frantz, B.</span>, <span class="refAuthor">Lampson, B.</span>, <span class="refAuthor">Rivest, R.</span>, <span class="refAuthor">Thomas, B.</span>, and <span class="refAuthor">T. Ylonen</span>, <span class="refTitle">"SPKI Certificate Theory"</span>, <span class="seriesInfo">RFC 2693</span>, <span class="seriesInfo">DOI 10.17487/RFC2693</span>, <time datetime="1999-09" class="refDate">September 1999</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2693">https://www.rfc-editor.org/info/rfc2693</a>&gt;</span>. </dd>
@@ -1777,69 +1829,21 @@ li > p:last-of-type:only-child {
       <dd>
 <span class="refAuthor">Pritikin, M.</span>, <span class="refAuthor">Richardson, M.</span>, <span class="refAuthor">Eckert, T.</span>, <span class="refAuthor">Behringer, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"Bootstrapping Remote Secure Key Infrastructure (BRSKI)"</span>, <span class="seriesInfo">RFC 8995</span>, <span class="seriesInfo">DOI 10.17487/RFC8995</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8995">https://www.rfc-editor.org/info/rfc8995</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="IEEE.802.1AR">[IEEE.802.1AR]</dt>
-      <dd>
-<span class="refAuthor">IEEE</span>, <span class="refTitle">"IEEE Standard for Local and Metropolitan Area Networks - Secure Device Identity"</span>, <span class="seriesInfo">IEEE 802.1AR-2018</span>, <time datetime="2018" class="refDate">2018</time>, <span>&lt;<a href="https://standards.ieee.org/ieee/802.1AR/7436/">https://standards.ieee.org/ieee/802.1AR/7436/</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="Matter">[Matter]</dt>
-      <dd>
-<span class="refAuthor">Connectivity Standards Alliance</span>, <span class="refTitle">"Matter Specification, Version 1.4"</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://csa-iot.org/all-solutions/matter/">https://csa-iot.org/all-solutions/matter/</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="DPP">[DPP]</dt>
-      <dd>
-<span class="refAuthor">Wi-Fi Alliance</span>, <span class="refTitle">"Device Provisioning Protocol Specification, Version 3.0"</span>, <time datetime="2023" class="refDate">2023</time>, <span>&lt;<a href="https://www.wi-fi.org/discover-wi-fi/wi-fi-easy-connect">https://www.wi-fi.org/discover-wi-fi/wi-fi-easy-connect</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="PrivateDrop">[PrivateDrop]</dt>
-      <dd>
-<span class="refAuthor">Heinrich, A.</span>, <span class="refAuthor">Hollick, M.</span>, <span class="refAuthor">Schneider, T.</span>, <span class="refAuthor">Stute, M.</span>, and <span class="refAuthor">C. Weinert</span>, <span class="refTitle">"PrivateDrop: Practical Privacy-Preserving Authentication for Apple AirDrop"</span>, <span class="seriesInfo">USENIX Security 2021</span>, <time datetime="2021-08" class="refDate">August 2021</time>, <span>&lt;<a href="https://www.usenix.org/conference/usenixsecurity21/presentation/heinrich">https://www.usenix.org/conference/usenixsecurity21/presentation/heinrich</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.wing-settle-referee">[I-D.wing-settle-referee]</dt>
-      <dd>
-<span class="refAuthor">Wing, D.</span>, <span class="refTitle">"A Referee to Authenticate Servers in Local Domains"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-wing-settle-referee-00</span>, <time datetime="2025-01" class="refDate">January 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-wing-settle-referee">https://datatracker.ietf.org/doc/html/draft-wing-settle-referee</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.wing-settle-public-key-hash">[I-D.wing-settle-public-key-hash]</dt>
-      <dd>
-<span class="refAuthor">Wing, D.</span>, <span class="refTitle">"Public Key Hash for Local Domains"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-wing-settle-public-key-hash-01</span>, <time datetime="2025" class="refDate">2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-wing-settle-public-key-hash">https://datatracker.ietf.org/doc/html/draft-wing-settle-public-key-hash</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.sweet-iot-acme">[I-D.sweet-iot-acme]</dt>
-      <dd>
-<span class="refAuthor">Sweet, M.</span>, <span class="refTitle">"ACME-Based Provisioning of IoT Devices"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-sweet-iot-acme-07</span>, <time datetime="2025-02" class="refDate">February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-sweet-iot-acme">https://datatracker.ietf.org/doc/html/draft-sweet-iot-acme</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-anima-brski-prm">[I-D.ietf-anima-brski-prm]</dt>
-      <dd>
-<span class="refAuthor">Fries, S.</span>, <span class="refAuthor">Werner, T.</span>, <span class="refAuthor">Lear, E.</span>, and <span class="refAuthor">M. Richardson</span>, <span class="refTitle">"BRSKI with Pledge in Responder Mode (BRSKI-PRM)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-anima-brski-prm-23</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-anima-brski-prm">https://datatracker.ietf.org/doc/html/draft-ietf-anima-brski-prm</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.irtf-t2trg-taxonomy-manufacturer-anchors">[I-D.irtf-t2trg-taxonomy-manufacturer-anchors]</dt>
-      <dd>
-<span class="refAuthor">Richardson, M.</span>, <span class="refTitle">"Taxonomy of Manufacturer-Installed Trust Anchors"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-irtf-t2trg-taxonomy-manufacturer-anchors</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-taxonomy-manufacturer-anchors">https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-taxonomy-manufacturer-anchors</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-emu-bootstrapped-tls">[I-D.ietf-emu-bootstrapped-tls]</dt>
-      <dd>
-<span class="refAuthor">Friel, O.</span> and <span class="refAuthor">D. Harkins</span>, <span class="refTitle">"Bootstrapped TLS Authentication with Proof of Knowledge"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-emu-bootstrapped-tls-07</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-emu-bootstrapped-tls">https://datatracker.ietf.org/doc/html/draft-ietf-emu-bootstrapped-tls</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-uta-tls13-iot-profile">[I-D.ietf-uta-tls13-iot-profile]</dt>
-      <dd>
-<span class="refAuthor">Fossati, T.</span> and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"TLS/DTLS 1.3 Profiles for the Internet of Things"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-uta-tls13-iot-profile-11</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-uta-tls13-iot-profile">https://datatracker.ietf.org/doc/html/draft-ietf-uta-tls13-iot-profile</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.housley-lamps-macaddress-on">[I-D.housley-lamps-macaddress-on]</dt>
-      <dd>
-<span class="refAuthor">Housley, R.</span>, <span class="refTitle">"MAC Address in X.509 Certificate otherName"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-housley-lamps-macaddress-on</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-housley-lamps-macaddress-on">https://datatracker.ietf.org/doc/html/draft-housley-lamps-macaddress-on</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="W3C.SecureContexts">[W3C.SecureContexts]</dt>
-      <dd>
-<span class="refAuthor">West, M.</span>, <span class="refTitle">"Secure Contexts"</span>, <span class="seriesInfo">W3C Candidate Recommendation CR-secure-contexts</span>, <time datetime="2021-09" class="refDate">September 2021</time>, <span>&lt;<a href="https://w3c.github.io/webappsec-secure-contexts/">https://w3c.github.io/webappsec-secure-contexts/</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC9382">[RFC9382]</dt>
       <dd>
 <span class="refAuthor">Ladd, W.</span>, <span class="refTitle">"SPAKE2, a Password-Authenticated Key Exchange"</span>, <span class="seriesInfo">RFC 9382</span>, <span class="seriesInfo">DOI 10.17487/RFC9382</span>, <time datetime="2023-09" class="refDate">September 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9382">https://www.rfc-editor.org/info/rfc9382</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SETTLE">[SETTLE]</dt>
+      <dd>
+<span class="refAuthor">IETF</span>, <span class="refTitle">"SEcure access To Tls Local rEsources (settle)"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/wg/settle/about/">https://datatracker.ietf.org/wg/settle/about/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="W3C.OpenScreen">[W3C.OpenScreen]</dt>
       <dd>
 <span class="refAuthor">W3C</span>, <span class="refTitle">"Open Screen Network Protocol"</span>, <span class="seriesInfo">W3C Community Group Report</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://www.w3.org/TR/openscreen-network/">https://www.w3.org/TR/openscreen-network/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.ietf-tls-pake">[I-D.ietf-tls-pake]</dt>
+<dt id="W3C.SecureContexts">[W3C.SecureContexts]</dt>
       <dd>
-<span class="refAuthor">Hoyland, J.</span> and <span class="refAuthor">O. Friel</span>, <span class="refTitle">"TLS 1.3 Extension for Password-Authenticated Key Exchange"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-tls-pake-00</span>, <time datetime="2025-09" class="refDate">September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-tls-pake">https://datatracker.ietf.org/doc/html/draft-ietf-tls-pake</a>&gt;</span>. </dd>
+<span class="refAuthor">West, M.</span>, <span class="refTitle">"Secure Contexts"</span>, <span class="seriesInfo">W3C Candidate Recommendation CR-secure-contexts</span>, <time datetime="2021-09" class="refDate">September 2021</time>, <span>&lt;<a href="https://w3c.github.io/webappsec-secure-contexts/">https://w3c.github.io/webappsec-secure-contexts/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="ZookosTriangle">[ZookosTriangle]</dt>
     <dd>
@@ -1884,7 +1888,7 @@ li > p:last-of-type:only-child {
 <a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-change-history" class="section-name selfRef">Change History</a>
       </h2>
 <p id="appendix-B-1">[ RFC Editor: This section to be deleted before RFC publication ]<a href="#appendix-B-1" class="pilcrow">¶</a></p>
-<p id="appendix-B-2">September 25, 2026 - draft-ietf-settle-requirements-00<a href="#appendix-B-2" class="pilcrow">¶</a></p>
+<p id="appendix-B-2">September 29, 2026 - draft-ietf-settle-requirements-00<a href="#appendix-B-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-B-3.1">Initial revision.<a href="#appendix-B-3.1" class="pilcrow">¶</a>
 </li>

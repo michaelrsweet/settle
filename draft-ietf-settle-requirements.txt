@@ -5,7 +5,7 @@
 SETTLE                                                     M. Sweet, Ed.
 Internet-Draft                             Lakeside Robotics Corporation
 Intended status: Informational                        M. De Backker, Ed.
-Expires: 29 March 2027                                 25 September 2026
+Expires: 2 April 2027                                  29 September 2026
 
 
   SEcure access To Tls Local rEsources (SETTLE) Problem Statement and
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 March 2027.
+   This Internet-Draft will expire on 2 April 2027.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Sweet & De Backker        Expires 29 March 2027                 [Page 1]
+Sweet & De Backker        Expires 2 April 2027                  [Page 1]
 
 Internet-Draft             SETTLE Requirements            September 2026
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Sweet & De Backker        Expires 29 March 2027                 [Page 2]
+Sweet & De Backker        Expires 2 April 2027                  [Page 2]
 
 Internet-Draft             SETTLE Requirements            September 2026
 
@@ -165,7 +165,7 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 29 March 2027                 [Page 3]
+Sweet & De Backker        Expires 2 April 2027                  [Page 3]
 
 Internet-Draft             SETTLE Requirements            September 2026
 
@@ -221,7 +221,7 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 29 March 2027                 [Page 4]
+Sweet & De Backker        Expires 2 April 2027                  [Page 4]
 
 Internet-Draft             SETTLE Requirements            September 2026
 
@@ -242,16 +242,16 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 3.  Overview and Goals
 
-   SETTLE is concerned with enabling Protected Communications within any
-   Zero-Trust Local Area Network.  Protected Communications typically
-   are implemented using of TLS [RFC9846] with X.509 certificates
-   [RFC5280] signed by a known Trust Anchor.  Importantly, SETTLE does
-   not deal with the notion of trustworthiness (authentication,
-   authorization, access control, and/or attestation) or Users but
-   instead is focused on the more basic issues of Device Identity
-   verification and the use of a Local Certificate Authority and Trust
-   Anchor to permit local autonomous operation without an active
-   connection to the Internet.
+   SEcure access To Tls Local rEsources (SETTLE) [SETTLE] is concerned
+   with enabling Protected Communications within any Zero-Trust Local
+   Area Network.  Protected Communications typically are implemented
+   using of TLS [RFC9846] with X.509 certificates [RFC5280] signed by a
+   known Trust Anchor.  Importantly, SETTLE does not deal with the
+   notion of trustworthiness (authentication, authorization, access
+   control, and/or attestation) or Users but instead is focused on the
+   more basic issues of Device Identity verification and the use of a
+   Local Certificate Authority and Trust Anchor to permit local
+   autonomous operation without an active connection to the Internet.
 
    The goals of SETTLE include:
 
@@ -277,7 +277,7 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 29 March 2027                 [Page 5]
+Sweet & De Backker        Expires 2 April 2027                  [Page 5]
 
 Internet-Draft             SETTLE Requirements            September 2026
 
@@ -333,7 +333,7 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 29 March 2027                 [Page 6]
+Sweet & De Backker        Expires 2 April 2027                  [Page 6]
 
 Internet-Draft             SETTLE Requirements            September 2026
 
@@ -389,7 +389,7 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 29 March 2027                 [Page 7]
+Sweet & De Backker        Expires 2 April 2027                  [Page 7]
 
 Internet-Draft             SETTLE Requirements            September 2026
 
@@ -445,7 +445,7 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 29 March 2027                 [Page 8]
+Sweet & De Backker        Expires 2 April 2027                  [Page 8]
 
 Internet-Draft             SETTLE Requirements            September 2026
 
@@ -501,7 +501,7 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 29 March 2027                 [Page 9]
+Sweet & De Backker        Expires 2 April 2027                  [Page 9]
 
 Internet-Draft             SETTLE Requirements            September 2026
 
@@ -557,7 +557,7 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 29 March 2027                [Page 10]
+Sweet & De Backker        Expires 2 April 2027                 [Page 10]
 
 Internet-Draft             SETTLE Requirements            September 2026
 
@@ -568,6 +568,96 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 9.  Informative References
 
+   [DPP]      Wi-Fi Alliance, "Device Provisioning Protocol
+              Specification, Version 3.0", 2023,
+              <https://www.wi-fi.org/discover-wi-fi/wi-fi-easy-connect>.
+
+   [I-D.housley-lamps-macaddress-on]
+              Housley, R., "MAC Address in X.509 Certificate otherName",
+              Work in Progress, Internet-Draft, draft-housley-lamps-
+              macaddress-on, 2026,
+              <https://datatracker.ietf.org/doc/html/draft-housley-
+              lamps-macaddress-on>.
+
+   [I-D.ietf-anima-brski-prm]
+              Fries, S., Werner, T., Lear, E., and M. Richardson, "BRSKI
+              with Pledge in Responder Mode (BRSKI-PRM)", Work in
+              Progress, Internet-Draft, draft-ietf-anima-brski-prm-23,
+              2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              anima-brski-prm>.
+
+   [I-D.ietf-emu-bootstrapped-tls]
+              Friel, O. and D. Harkins, "Bootstrapped TLS Authentication
+              with Proof of Knowledge", Work in Progress, Internet-
+              Draft, draft-ietf-emu-bootstrapped-tls-07, 2024,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-emu-
+              bootstrapped-tls>.
+
+   [I-D.ietf-tls-pake]
+              Hoyland, J. and O. Friel, "TLS 1.3 Extension for Password-
+              Authenticated Key Exchange", Work in Progress, Internet-
+              Draft, draft-ietf-tls-pake-00, September 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-tls-
+              pake>.
+
+   [I-D.ietf-uta-tls13-iot-profile]
+              Fossati, T. and H. Tschofenig, "TLS/DTLS 1.3 Profiles for
+              the Internet of Things", Work in Progress, Internet-Draft,
+              draft-ietf-uta-tls13-iot-profile-11, 2024,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-uta-
+              tls13-iot-profile>.
+
+   [I-D.irtf-t2trg-taxonomy-manufacturer-anchors]
+              Richardson, M., "Taxonomy of Manufacturer-Installed Trust
+              Anchors", Work in Progress, Internet-Draft, draft-irtf-
+
+
+
+Sweet & De Backker        Expires 2 April 2027                 [Page 11]
+
+Internet-Draft             SETTLE Requirements            September 2026
+
+
+              t2trg-taxonomy-manufacturer-anchors, 2024,
+              <https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-
+              taxonomy-manufacturer-anchors>.
+
+   [I-D.sweet-iot-acme]
+              Sweet, M., "ACME-Based Provisioning of IoT Devices", Work
+              in Progress, Internet-Draft, draft-sweet-iot-acme-07,
+              February 2025, <https://datatracker.ietf.org/doc/html/
+              draft-sweet-iot-acme>.
+
+   [I-D.wing-settle-public-key-hash]
+              Wing, D., "Public Key Hash for Local Domains", Work in
+              Progress, Internet-Draft, draft-wing-settle-public-key-
+              hash-01, 2025, <https://datatracker.ietf.org/doc/html/
+              draft-wing-settle-public-key-hash>.
+
+   [I-D.wing-settle-referee]
+              Wing, D., "A Referee to Authenticate Servers in Local
+              Domains", Work in Progress, Internet-Draft, draft-wing-
+              settle-referee-00, January 2025,
+              <https://datatracker.ietf.org/doc/html/draft-wing-settle-
+              referee>.
+
+   [IEEE.802.1AR]
+              IEEE, "IEEE Standard for Local and Metropolitan Area
+              Networks - Secure Device Identity", IEEE 802.1AR-2018,
+              2018, <https://standards.ieee.org/ieee/802.1AR/7436/>.
+
+   [Matter]   Connectivity Standards Alliance, "Matter Specification,
+              Version 1.4", 2024,
+              <https://csa-iot.org/all-solutions/matter/>.
+
+   [PrivateDrop]
+              Heinrich, A., Hollick, M., Schneider, T., Stute, M., and
+              C. Weinert, "PrivateDrop: Practical Privacy-Preserving
+              Authentication for Apple AirDrop", USENIX Security 2021,
+              August 2021,
+              <https://www.usenix.org/conference/usenixsecurity21/
+              presentation/heinrich>.
+
    [RFC2693]  Ellison, C., Frantz, B., Lampson, B., Rivest, R., Thomas,
               B., and T. Ylonen, "SPKI Certificate Theory", RFC 2693,
               DOI 10.17487/RFC2693, September 1999,
@@ -576,6 +666,13 @@ Internet-Draft             SETTLE Requirements            September 2026
    [RFC3514]  Bellovin, S., "The Security Flag in the IPv4 Header",
               RFC 3514, DOI 10.17487/RFC3514, April 2003,
               <https://www.rfc-editor.org/info/rfc3514>.
+
+
+
+Sweet & De Backker        Expires 2 April 2027                 [Page 12]
+
+Internet-Draft             SETTLE Requirements            September 2026
+
 
    [RFC6973]  Cooper, A., Tschofenig, H., Aboba, B., Peterson, J.,
               Morris, J., Hansen, M., and R. Smith, "Privacy
@@ -607,17 +704,6 @@ Internet-Draft             SETTLE Requirements            September 2026
               Protocols", RFC 8799, DOI 10.17487/RFC8799, July 2020,
               <https://www.rfc-editor.org/info/rfc8799>.
 
-
-
-
-
-
-
-Sweet & De Backker        Expires 29 March 2027                [Page 11]
-
-Internet-Draft             SETTLE Requirements            September 2026
-
-
    [RFC8910]  Kumari, W. and E. Kline, "Captive-Portal Identification in
               DHCP and Router Advertisements (RAs)", RFC 8910,
               DOI 10.17487/RFC8910, September 2020,
@@ -628,122 +714,30 @@ Internet-Draft             SETTLE Requirements            September 2026
               Infrastructure (BRSKI)", RFC 8995, DOI 10.17487/RFC8995,
               May 2021, <https://www.rfc-editor.org/info/rfc8995>.
 
-   [IEEE.802.1AR]
-              IEEE, "IEEE Standard for Local and Metropolitan Area
-              Networks - Secure Device Identity", IEEE 802.1AR-2018,
-              2018, <https://standards.ieee.org/ieee/802.1AR/7436/>.
-
-   [Matter]   Connectivity Standards Alliance, "Matter Specification,
-              Version 1.4", 2024,
-              <https://csa-iot.org/all-solutions/matter/>.
-
-   [DPP]      Wi-Fi Alliance, "Device Provisioning Protocol
-              Specification, Version 3.0", 2023,
-              <https://www.wi-fi.org/discover-wi-fi/wi-fi-easy-connect>.
-
-   [PrivateDrop]
-              Heinrich, A., Hollick, M., Schneider, T., Stute, M., and
-              C. Weinert, "PrivateDrop: Practical Privacy-Preserving
-              Authentication for Apple AirDrop", USENIX Security 2021,
-              August 2021,
-              <https://www.usenix.org/conference/usenixsecurity21/
-              presentation/heinrich>.
-
-   [I-D.wing-settle-referee]
-              Wing, D., "A Referee to Authenticate Servers in Local
-              Domains", Work in Progress, Internet-Draft, draft-wing-
-              settle-referee-00, January 2025,
-              <https://datatracker.ietf.org/doc/html/draft-wing-settle-
-              referee>.
-
-   [I-D.wing-settle-public-key-hash]
-              Wing, D., "Public Key Hash for Local Domains", Work in
-              Progress, Internet-Draft, draft-wing-settle-public-key-
-              hash-01, 2025, <https://datatracker.ietf.org/doc/html/
-              draft-wing-settle-public-key-hash>.
-
-
-
-
-
-
-
-
-Sweet & De Backker        Expires 29 March 2027                [Page 12]
-
-Internet-Draft             SETTLE Requirements            September 2026
-
-
-   [I-D.sweet-iot-acme]
-              Sweet, M., "ACME-Based Provisioning of IoT Devices", Work
-              in Progress, Internet-Draft, draft-sweet-iot-acme-07,
-              February 2025, <https://datatracker.ietf.org/doc/html/
-              draft-sweet-iot-acme>.
-
-   [I-D.ietf-anima-brski-prm]
-              Fries, S., Werner, T., Lear, E., and M. Richardson, "BRSKI
-              with Pledge in Responder Mode (BRSKI-PRM)", Work in
-              Progress, Internet-Draft, draft-ietf-anima-brski-prm-23,
-              2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              anima-brski-prm>.
-
-   [I-D.irtf-t2trg-taxonomy-manufacturer-anchors]
-              Richardson, M., "Taxonomy of Manufacturer-Installed Trust
-              Anchors", Work in Progress, Internet-Draft, draft-irtf-
-              t2trg-taxonomy-manufacturer-anchors, 2024,
-              <https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-
-              taxonomy-manufacturer-anchors>.
-
-   [I-D.ietf-emu-bootstrapped-tls]
-              Friel, O. and D. Harkins, "Bootstrapped TLS Authentication
-              with Proof of Knowledge", Work in Progress, Internet-
-              Draft, draft-ietf-emu-bootstrapped-tls-07, 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-emu-
-              bootstrapped-tls>.
-
-   [I-D.ietf-uta-tls13-iot-profile]
-              Fossati, T. and H. Tschofenig, "TLS/DTLS 1.3 Profiles for
-              the Internet of Things", Work in Progress, Internet-Draft,
-              draft-ietf-uta-tls13-iot-profile-11, 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-uta-
-              tls13-iot-profile>.
-
-   [I-D.housley-lamps-macaddress-on]
-              Housley, R., "MAC Address in X.509 Certificate otherName",
-              Work in Progress, Internet-Draft, draft-housley-lamps-
-              macaddress-on, 2026,
-              <https://datatracker.ietf.org/doc/html/draft-housley-
-              lamps-macaddress-on>.
-
-   [W3C.SecureContexts]
-              West, M., "Secure Contexts", W3C Candidate Recommendation 
-              CR-secure-contexts, September 2021,
-              <https://w3c.github.io/webappsec-secure-contexts/>.
-
-
-
-
-
-
-Sweet & De Backker        Expires 29 March 2027                [Page 13]
-
-Internet-Draft             SETTLE Requirements            September 2026
-
-
    [RFC9382]  Ladd, W., "SPAKE2, a Password-Authenticated Key Exchange",
               RFC 9382, DOI 10.17487/RFC9382, September 2023,
               <https://www.rfc-editor.org/info/rfc9382>.
+
+   [SETTLE]   IETF, "SEcure access To Tls Local rEsources (settle)",
+              2026, <https://datatracker.ietf.org/wg/settle/about/>.
+
+
+
+
+
+Sweet & De Backker        Expires 2 April 2027                 [Page 13]
+
+Internet-Draft             SETTLE Requirements            September 2026
+
 
    [W3C.OpenScreen]
               W3C, "Open Screen Network Protocol", W3C Community Group
               Report, 2024, <https://www.w3.org/TR/openscreen-network/>.
 
-   [I-D.ietf-tls-pake]
-              Hoyland, J. and O. Friel, "TLS 1.3 Extension for Password-
-              Authenticated Key Exchange", Work in Progress, Internet-
-              Draft, draft-ietf-tls-pake-00, September 2025,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-tls-
-              pake>.
+   [W3C.SecureContexts]
+              West, M., "Secure Contexts", W3C Candidate Recommendation 
+              CR-secure-contexts, September 2021,
+              <https://w3c.github.io/webappsec-secure-contexts/>.
 
    [ZookosTriangle]
               Wilcox-O'Hearn, Z., "Names: Decentralized, Secure, Human-
@@ -778,20 +772,19 @@ Appendix A.  Prior Art and Related Work
       [W3C.OpenScreen] provides a particularly clean construction for
       local device pairing without pre-shared keys.  Devices establish a
       provisional QUIC/TLS connection using self-signed certificates,
-
-
-
-Sweet & De Backker        Expires 29 March 2027                [Page 14]
-
-Internet-Draft             SETTLE Requirements            September 2026
-
-
       then authenticate it via SPAKE2 [RFC9382] bound to a user-
       transferred PIN.  This pattern of "connect first, authenticate via
       PAKE second" is directly applicable to SETTLE's Track A.  Emerging
       IETF work on integrating PAKEs directly into TLS 1.3
       [I-D.ietf-tls-pake] may provide a standardized transport for this
       class of bootstrapping.
+
+
+
+Sweet & De Backker        Expires 2 April 2027                 [Page 14]
+
+Internet-Draft             SETTLE Requirements            September 2026
+
 
    *  *AirDrop / PrivateDrop:* Traditional local discovery using
       truncated hashes leaks user identifiers.  Research into Private
@@ -816,7 +809,7 @@ Appendix B.  Change History
 
    [ RFC Editor: This section to be deleted before RFC publication ]
 
-   September 25, 2026 - draft-ietf-settle-requirements-00
+   September 29, 2026 - draft-ietf-settle-requirements-00
 
    *  Initial revision.
 
@@ -837,4 +830,11 @@ Authors' Addresses
 
 
 
-Sweet & De Backker        Expires 29 March 2027                [Page 15]
+
+
+
+
+
+
+
+Sweet & De Backker        Expires 2 April 2027                 [Page 15]
