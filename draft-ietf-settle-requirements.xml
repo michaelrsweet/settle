@@ -21,7 +21,7 @@
       </address>
     </author>
 
-    <date year="2026" month="September" day="25"/>
+    <date year="2026" month="September" day="29"/>
     <area>Internet</area>
     <workgroup>SETTLE</workgroup>
     <keyword>REQUIREMENTS</keyword>
@@ -114,7 +114,7 @@
 
 
     <section title="Overview and Goals">
-      <t>SETTLE is concerned with enabling Protected Communications within any Zero-Trust Local Area Network. Protected Communications typically are implemented using of TLS <xref target="RFC9846"/> with X.509 certificates <xref target="RFC5280"/> signed by a known Trust Anchor. Importantly, SETTLE does not deal with the notion of trustworthiness (authentication, authorization, access control, and/or attestation) or Users but instead is focused on the more basic issues of Device Identity verification and the use of a Local Certificate Authority and Trust Anchor to permit local autonomous operation without an active connection to the Internet.</t>
+      <t>SEcure access To Tls Local rEsources (SETTLE) <xref target="SETTLE" /> is concerned with enabling Protected Communications within any Zero-Trust Local Area Network. Protected Communications typically are implemented using of TLS <xref target="RFC9846"/> with X.509 certificates <xref target="RFC5280"/> signed by a known Trust Anchor. Importantly, SETTLE does not deal with the notion of trustworthiness (authentication, authorization, access control, and/or attestation) or Users but instead is focused on the more basic issues of Device Identity verification and the use of a Local Certificate Authority and Trust Anchor to permit local autonomous operation without an active connection to the Internet.</t>
 
       <t>The goals of SETTLE include:</t>
 
@@ -259,16 +259,100 @@
     </references>
 
     <references title="Informative References">
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2693.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3514.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6973.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7030.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8314.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8366.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8555.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8799.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8910.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8995.xml"/>
+      <reference anchor="DPP" target="https://www.wi-fi.org/discover-wi-fi/wi-fi-easy-connect">
+        <front>
+          <title>Device Provisioning Protocol Specification, Version 3.0</title>
+          <author><organization>Wi-Fi Alliance</organization></author>
+          <date year="2023"/>
+        </front>
+      </reference>
+
+      <reference anchor="I-D.housley-lamps-macaddress-on" target="https://datatracker.ietf.org/doc/html/draft-housley-lamps-macaddress-on">
+        <front>
+          <title>MAC Address in X.509 Certificate otherName</title>
+          <author fullname="Russ Housley" initials="R." surname="Housley"/>
+          <date year="2026"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-housley-lamps-macaddress-on"/>
+      </reference>
+
+      <reference anchor="I-D.ietf-anima-brski-prm" target="https://datatracker.ietf.org/doc/html/draft-ietf-anima-brski-prm">
+        <front>
+          <title>BRSKI with Pledge in Responder Mode (BRSKI-PRM)</title>
+          <author fullname="Steffen Fries" initials="S." surname="Fries"/>
+          <author fullname="Thomas Werner" initials="T." surname="Werner"/>
+          <author fullname="Eliot Lear" initials="E." surname="Lear"/>
+          <author fullname="Michael Richardson" initials="M." surname="Richardson"/>
+          <date year="2024"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-anima-brski-prm-23"/>
+      </reference>
+
+      <reference anchor="I-D.ietf-emu-bootstrapped-tls" target="https://datatracker.ietf.org/doc/html/draft-ietf-emu-bootstrapped-tls">
+        <front>
+          <title>Bootstrapped TLS Authentication with Proof of Knowledge</title>
+          <author fullname="Owen Friel" initials="O." surname="Friel"/>
+          <author fullname="Dan Harkins" initials="D." surname="Harkins"/>
+          <date year="2024"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-emu-bootstrapped-tls-07"/>
+      </reference>
+
+      <reference anchor="I-D.ietf-tls-pake" target="https://datatracker.ietf.org/doc/html/draft-ietf-tls-pake">
+        <front>
+          <title>TLS 1.3 Extension for Password-Authenticated Key Exchange</title>
+          <author fullname="Jonathan Hoyland" initials="J." surname="Hoyland"/>
+          <author fullname="Owen Friel" initials="O." surname="Friel"/>
+          <date year="2025" month="September"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-tls-pake-00"/>
+      </reference>
+
+      <reference anchor="I-D.ietf-uta-tls13-iot-profile" target="https://datatracker.ietf.org/doc/html/draft-ietf-uta-tls13-iot-profile">
+        <front>
+          <title>TLS/DTLS 1.3 Profiles for the Internet of Things</title>
+          <author fullname="Thomas Fossati" initials="T." surname="Fossati"/>
+          <author fullname="Hannes Tschofenig" initials="H." surname="Tschofenig"/>
+          <date year="2024"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-uta-tls13-iot-profile-11"/>
+      </reference>
+
+      <reference anchor="I-D.irtf-t2trg-taxonomy-manufacturer-anchors" target="https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-taxonomy-manufacturer-anchors">
+        <front>
+          <title>Taxonomy of Manufacturer-Installed Trust Anchors</title>
+          <author fullname="Michael Richardson" initials="M." surname="Richardson"/>
+          <date year="2024"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-irtf-t2trg-taxonomy-manufacturer-anchors"/>
+      </reference>
+
+      <reference anchor="I-D.sweet-iot-acme" target="https://datatracker.ietf.org/doc/html/draft-sweet-iot-acme">
+        <front>
+          <title>ACME-Based Provisioning of IoT Devices</title>
+          <author fullname="Michael Sweet" initials="M." surname="Sweet"/>
+          <date year="2025" month="February"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-sweet-iot-acme-07"/>
+      </reference>
+
+      <reference anchor="I-D.wing-settle-public-key-hash" target="https://datatracker.ietf.org/doc/html/draft-wing-settle-public-key-hash">
+        <front>
+          <title>Public Key Hash for Local Domains</title>
+          <author fullname="Dan Wing" initials="D." surname="Wing"/>
+          <date year="2025"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-wing-settle-public-key-hash-01"/>
+      </reference>
+
+      <reference anchor="I-D.wing-settle-referee" target="https://datatracker.ietf.org/doc/html/draft-wing-settle-referee">
+        <front>
+          <title>A Referee to Authenticate Servers in Local Domains</title>
+          <author fullname="Dan Wing" initials="D." surname="Wing"/>
+          <date year="2025" month="January"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-wing-settle-referee-00"/>
+      </reference>
 
       <reference anchor="IEEE.802.1AR" target="https://standards.ieee.org/ieee/802.1AR/7436/">
         <front>
@@ -287,14 +371,6 @@
         </front>
       </reference>
 
-      <reference anchor="DPP" target="https://www.wi-fi.org/discover-wi-fi/wi-fi-easy-connect">
-        <front>
-          <title>Device Provisioning Protocol Specification, Version 3.0</title>
-          <author><organization>Wi-Fi Alliance</organization></author>
-          <date year="2023"/>
-        </front>
-      </reference>
-
       <reference anchor="PrivateDrop" target="https://www.usenix.org/conference/usenixsecurity21/presentation/heinrich">
         <front>
           <title>PrivateDrop: Practical Privacy-Preserving Authentication for Apple AirDrop</title>
@@ -308,93 +384,25 @@
         <seriesInfo name="USENIX Security" value="2021"/>
       </reference>
 
-      <reference anchor="I-D.wing-settle-referee" target="https://datatracker.ietf.org/doc/html/draft-wing-settle-referee">
-        <front>
-          <title>A Referee to Authenticate Servers in Local Domains</title>
-          <author fullname="Dan Wing" initials="D." surname="Wing"/>
-          <date year="2025" month="January"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-wing-settle-referee-00"/>
-      </reference>
-
-      <reference anchor="I-D.wing-settle-public-key-hash" target="https://datatracker.ietf.org/doc/html/draft-wing-settle-public-key-hash">
-        <front>
-          <title>Public Key Hash for Local Domains</title>
-          <author fullname="Dan Wing" initials="D." surname="Wing"/>
-          <date year="2025"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-wing-settle-public-key-hash-01"/>
-      </reference>
-
-      <reference anchor="I-D.sweet-iot-acme" target="https://datatracker.ietf.org/doc/html/draft-sweet-iot-acme">
-        <front>
-          <title>ACME-Based Provisioning of IoT Devices</title>
-          <author fullname="Michael Sweet" initials="M." surname="Sweet"/>
-          <date year="2025" month="February"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-sweet-iot-acme-07"/>
-      </reference>
-
-      <reference anchor="I-D.ietf-anima-brski-prm" target="https://datatracker.ietf.org/doc/html/draft-ietf-anima-brski-prm">
-        <front>
-          <title>BRSKI with Pledge in Responder Mode (BRSKI-PRM)</title>
-          <author fullname="Steffen Fries" initials="S." surname="Fries"/>
-          <author fullname="Thomas Werner" initials="T." surname="Werner"/>
-          <author fullname="Eliot Lear" initials="E." surname="Lear"/>
-          <author fullname="Michael Richardson" initials="M." surname="Richardson"/>
-          <date year="2024"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-anima-brski-prm-23"/>
-      </reference>
-
-      <reference anchor="I-D.irtf-t2trg-taxonomy-manufacturer-anchors" target="https://datatracker.ietf.org/doc/html/draft-irtf-t2trg-taxonomy-manufacturer-anchors">
-        <front>
-          <title>Taxonomy of Manufacturer-Installed Trust Anchors</title>
-          <author fullname="Michael Richardson" initials="M." surname="Richardson"/>
-          <date year="2024"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-irtf-t2trg-taxonomy-manufacturer-anchors"/>
-      </reference>
-
-      <reference anchor="I-D.ietf-emu-bootstrapped-tls" target="https://datatracker.ietf.org/doc/html/draft-ietf-emu-bootstrapped-tls">
-        <front>
-          <title>Bootstrapped TLS Authentication with Proof of Knowledge</title>
-          <author fullname="Owen Friel" initials="O." surname="Friel"/>
-          <author fullname="Dan Harkins" initials="D." surname="Harkins"/>
-          <date year="2024"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-emu-bootstrapped-tls-07"/>
-      </reference>
-
-      <reference anchor="I-D.ietf-uta-tls13-iot-profile" target="https://datatracker.ietf.org/doc/html/draft-ietf-uta-tls13-iot-profile">
-        <front>
-          <title>TLS/DTLS 1.3 Profiles for the Internet of Things</title>
-          <author fullname="Thomas Fossati" initials="T." surname="Fossati"/>
-          <author fullname="Hannes Tschofenig" initials="H." surname="Tschofenig"/>
-          <date year="2024"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-uta-tls13-iot-profile-11"/>
-      </reference>
-
-      <reference anchor="I-D.housley-lamps-macaddress-on" target="https://datatracker.ietf.org/doc/html/draft-housley-lamps-macaddress-on">
-        <front>
-          <title>MAC Address in X.509 Certificate otherName</title>
-          <author fullname="Russ Housley" initials="R." surname="Housley"/>
-          <date year="2026"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-housley-lamps-macaddress-on"/>
-      </reference>
-
-      <reference anchor="W3C.SecureContexts" target="https://w3c.github.io/webappsec-secure-contexts/">
-        <front>
-          <title>Secure Contexts</title>
-          <author fullname="Mike West"/>
-          <date year="2021" month="September"/>
-        </front>
-        <seriesInfo name="W3C Candidate Recommendation" value="CR-secure-contexts"/>
-      </reference>
-
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2693.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3514.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6973.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7030.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8314.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8366.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8555.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8799.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8910.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8995.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9382.xml"/>
+
+      <reference anchor="SETTLE" target="https://datatracker.ietf.org/wg/settle/about/">
+        <front>
+          <title>SEcure access To Tls Local rEsources (settle)</title>
+          <author><organization>IETF</organization></author>
+          <date year="2026"/>
+	</front>
+      </reference>
 
       <reference anchor="W3C.OpenScreen" target="https://www.w3.org/TR/openscreen-network/">
         <front>
@@ -405,14 +413,13 @@
         <seriesInfo name="W3C" value="Community Group Report"/>
       </reference>
 
-      <reference anchor="I-D.ietf-tls-pake" target="https://datatracker.ietf.org/doc/html/draft-ietf-tls-pake">
+      <reference anchor="W3C.SecureContexts" target="https://w3c.github.io/webappsec-secure-contexts/">
         <front>
-          <title>TLS 1.3 Extension for Password-Authenticated Key Exchange</title>
-          <author fullname="Jonathan Hoyland" initials="J." surname="Hoyland"/>
-          <author fullname="Owen Friel" initials="O." surname="Friel"/>
-          <date year="2025" month="September"/>
+          <title>Secure Contexts</title>
+          <author fullname="Mike West"/>
+          <date year="2021" month="September"/>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-tls-pake-00"/>
+        <seriesInfo name="W3C Candidate Recommendation" value="CR-secure-contexts"/>
       </reference>
 
       <reference anchor="ZookosTriangle" target="https://en.wikipedia.org/wiki/Zooko%27s_triangle">
@@ -443,7 +450,7 @@
 
     <section title="Change History">
       <t>[ RFC Editor: This section to be deleted before RFC publication ]</t>
-      <t>September 25, 2026 - draft-ietf-settle-requirements-00</t>
+      <t>September 29, 2026 - draft-ietf-settle-requirements-00</t>
       <ul>
         <li>Initial revision.</li>
       </ul>
