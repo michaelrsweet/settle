@@ -10,6 +10,9 @@
     <author fullname="Michael Sweet" initials="M." role="editor" surname="Sweet">
       <organization>Lakeside Robotics Corporation</organization>
       <address>
+        <postal>
+          <country>Canada</country>
+        </postal>
         <email>msweet@lakesiderobotics.ca</email>
       </address>
     </author>
@@ -21,7 +24,7 @@
       </address>
     </author>
 
-    <date year="2026" month="September" day="29"/>
+    <date year="2026" month="October" day="3"/>
     <area>Internet</area>
     <workgroup>SETTLE</workgroup>
     <keyword>REQUIREMENTS</keyword>
