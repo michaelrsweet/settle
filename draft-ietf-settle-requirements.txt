@@ -5,7 +5,7 @@
 SETTLE                                                     M. Sweet, Ed.
 Internet-Draft                             Lakeside Robotics Corporation
 Intended status: Informational                        M. De Backker, Ed.
-Expires: 2 April 2027                                  29 September 2026
+Expires: 6 April 2027                                     3 October 2026
 
 
   SEcure access To Tls Local rEsources (SETTLE) Problem Statement and
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 April 2027.
+   This Internet-Draft will expire on 6 April 2027.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Sweet & De Backker        Expires 2 April 2027                  [Page 1]
+Sweet & De Backker        Expires 6 April 2027                  [Page 1]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
    Please review these documents carefully, as they describe your rights
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Sweet & De Backker        Expires 2 April 2027                  [Page 2]
+Sweet & De Backker        Expires 6 April 2027                  [Page 2]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
    concept of "Limited Domains" [RFC8799] encapsulates these local,
@@ -165,9 +165,9 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 2 April 2027                  [Page 3]
+Sweet & De Backker        Expires 6 April 2027                  [Page 3]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
    Cryptographic Identity:  A persistent, cryptographically verifiable
@@ -221,9 +221,9 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 2 April 2027                  [Page 4]
+Sweet & De Backker        Expires 6 April 2027                  [Page 4]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
    Trust On First Use (TOFU):  An approach where a Client Device and/or
@@ -277,9 +277,9 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 2 April 2027                  [Page 5]
+Sweet & De Backker        Expires 6 April 2027                  [Page 5]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
 4.  Requirements
@@ -333,9 +333,9 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 2 April 2027                  [Page 6]
+Sweet & De Backker        Expires 6 April 2027                  [Page 6]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
       support the use of manufacturer-installed certificates (e.g.,
@@ -389,9 +389,9 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 2 April 2027                  [Page 7]
+Sweet & De Backker        Expires 6 April 2027                  [Page 7]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
       mechanisms for routine key rotation, certificate renewal without
@@ -445,9 +445,9 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 2 April 2027                  [Page 8]
+Sweet & De Backker        Expires 6 April 2027                  [Page 8]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
 5.6.  Supply Chain Attacks
@@ -501,9 +501,9 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 2 April 2027                  [Page 9]
+Sweet & De Backker        Expires 6 April 2027                  [Page 9]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
@@ -557,9 +557,9 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 2 April 2027                 [Page 10]
+Sweet & De Backker        Expires 6 April 2027                 [Page 10]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
    [RFC9846]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
@@ -613,9 +613,9 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 2 April 2027                 [Page 11]
+Sweet & De Backker        Expires 6 April 2027                 [Page 11]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
               t2trg-taxonomy-manufacturer-anchors, 2024,
@@ -669,9 +669,9 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 2 April 2027                 [Page 12]
+Sweet & De Backker        Expires 6 April 2027                 [Page 12]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
    [RFC6973]  Cooper, A., Tschofenig, H., Aboba, B., Peterson, J.,
@@ -725,9 +725,9 @@ Internet-Draft             SETTLE Requirements            September 2026
 
 
 
-Sweet & De Backker        Expires 2 April 2027                 [Page 13]
+Sweet & De Backker        Expires 6 April 2027                 [Page 13]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
    [W3C.OpenScreen]
@@ -781,9 +781,9 @@ Appendix A.  Prior Art and Related Work
 
 
 
-Sweet & De Backker        Expires 2 April 2027                 [Page 14]
+Sweet & De Backker        Expires 6 April 2027                 [Page 14]
 
-Internet-Draft             SETTLE Requirements            September 2026
+Internet-Draft             SETTLE Requirements              October 2026
 
 
    *  *AirDrop / PrivateDrop:* Traditional local discovery using
@@ -817,6 +817,7 @@ Authors' Addresses
 
    Michael Sweet (editor)
    Lakeside Robotics Corporation
+   Canada
    Email: msweet@lakesiderobotics.ca
 
 
@@ -836,5 +837,4 @@ Authors' Addresses
 
 
 
-
-Sweet & De Backker        Expires 2 April 2027                 [Page 15]
+Sweet & De Backker        Expires 6 April 2027                 [Page 15]
