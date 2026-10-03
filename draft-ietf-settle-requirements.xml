@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE rfc>
 <?xml-stylesheet type='text/xsl' href='rfc7991.xslt' ?>
-<rfc ipr="trust200902" submissionType="IETF" category="info" version="3" docName="draft-ietf-settle-requirements-00" xmlns:xi="http://www.w3.org/2001/XInclude">
+<rfc ipr="trust200902" submissionType="IETF" category="info" version="3" docName="draft-sweet-settle-requirements-00" xmlns:xi="http://www.w3.org/2001/XInclude">
 
   <front>
     <title abbrev="SETTLE Requirements">SEcure access To Tls Local rEsources (SETTLE) Problem Statement and Requirements</title>
-    <seriesInfo name="Internet-Draft" status="informational" stream="IETF" value="draft-ietf-settle-requirements-00"/>
+    <seriesInfo name="Internet-Draft" status="informational" stream="IETF" value="draft-sweet-settle-requirements-00"/>
 
     <author fullname="Michael Sweet" initials="M." role="editor" surname="Sweet">
       <organization>Lakeside Robotics Corporation</organization>
