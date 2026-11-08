@@ -10,25 +10,25 @@
 <meta content="
        This document defines the problem statement, common terminology, security models, and technical requirements for identifying, validating, and establishing secure connections with local network devices. It outlines the challenges of extending the Web's Public Key Infrastructure (PKI) to local, offline, or &quot;limited domain&quot; environments. The document specifies requirements for privacy-preserving discovery, generating and distributing local trust anchors, and establishing mutually authenticated secure contexts without relying on global certificate authorities or problematic Trust On First Use (TOFU) mechanisms. 
     " name="description">
-<meta content="xml2rfc 3.34.1" name="generator">
+<meta content="xml2rfc 3.35.0" name="generator">
 <meta content="REQUIREMENTS" name="keyword">
 <meta content="TLS" name="keyword">
 <meta content="LOCAL" name="keyword">
 <meta content="draft-sweet-settle-requirements-00" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.34.1
+  xml2rfc 3.35.0
     Python 3.12.3
-    ConfigArgParse 1.8.0
+    ConfigArgParse 1.9.0
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.2
     lxml 6.1.3
     natsort 8.4.0
-    platformdirs 4.12.0
+    platformdirs 4.14.3
     pycountry 26.2.16
     PyYAML 6.0.1
     requests 2.31.0
-    wcwidth 0.9.1
+    wcwidth 0.9.4
 -->
 <link href="draft-ietf-settle-requirements.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1397,9 +1397,9 @@ li > p:last-of-type:only-child {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">Local networks have historically used a mix of encrypted and unencrypted communications with no common method to establish trust. Access is provided to those who have the Wi-Fi password or an Ethernet cable, and the connected device simply trusts the information provided to it by the DHCP service on that network. In contrast, the Internet increasingly uses encrypted communications with a well-regulated system of Certificate Authorities, Domain Name Providers, Address Registries, and distributed Domain Name Services that form the basis of trust on the "modern web."<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-1">Local networks have historically used a mix of encrypted and unencrypted communications with no common method to establish trust. Access is provided to those who have the Wi-Fi password or an Ethernet cable, and the connected device simply trusts the information provided to it by the DHCP service or Router Advertisements on that network. In contrast, the Internet increasingly uses encrypted communications with a well-regulated system of Certificate Authorities, Domain Name Providers, Address Registries, and distributed Domain Name Services that form the basis of trust on the "modern web."<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">With the advent of HTTPS everywhere, browsers disadvantage web services using unencrypted communications by requiring a Secure Context for features such as Direct Sockets, Geolocation, Service Workers, Web Bluetooth, WebCrypto, WebTransport, and WebRTC. The concept of "Limited Domains" <span>[<a href="#RFC8799" class="cite xref">RFC8799</a>]</span> encapsulates these local, constrained environments, but existing web security models struggle to adapt to them. Furthermore, modern browser security models, such as Local Network Access (LNA), restrict public websites from making requests to private IP addresses without explicit secure contexts and user permissions.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">Existing deployments of TLS on local networks typically use "self-signed" X.509 certificates that lack the endorsement of a trusted party, relying instead on Trust on First Use (TOFU) mechanisms. Because the client User Agent lacks a cryptographic trust anchor for the local device, it presents a "scary" certificate warning. Users frequently disregard these warnings, leading to warning fatigue and leaving them vulnerable to active interception. Conversely, network devices are unable to determine the trustworthiness of the local network, humorous solutions such as the "evil bit" from <span>[<a href="#RFC3514" class="cite xref">RFC3514</a>]</span> aside.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-3">Existing deployments of TLS on local networks typically use "self-signed" X.509 certificates that lack the endorsement of a trusted party, relying instead on Trust on First Use (TOFU) mechanisms. Because the client User Agent lacks a cryptographic trust anchor for the Infrastructure Device, it presents a "scary" certificate warning. Users frequently disregard these warnings, leading to warning fatigue and leaving them vulnerable to active interception. Conversely, network devices are unable to determine the trustworthiness of the local network, humorous solutions such as the "evil bit" from <span>[<a href="#RFC3514" class="cite xref">RFC3514</a>]</span> aside.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">This document defines common terminology and requirements for discovering, identifying, validating, and establishing secure connections with local network devices without relying on Trust On First Use (TOFU) or continuous Internet connectivity. Importantly, nothing here will help determine whether a network or network device is actually trustworthy, merely that it possesses a verifiable identity.<a href="#section-1-4" class="pilcrow">¶</a></p>
 </section>
 <section id="section-2">
@@ -1437,7 +1437,7 @@ li > p:last-of-type:only-child {
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-2.15">Device Name:</dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.16">A DNS or mDNS label for a Device. [MOVE THIS: It MUST be locally unique, and SHOULD be globally unique to prevent collisions.]<a href="#section-2-2.16" class="pilcrow">¶</a>
+        <dd style="margin-left: 1.5em" id="section-2-2.16">A DNS or mDNS label for a Device.<a href="#section-2-2.16" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-2.17">Infrastructure Device:</dt>
@@ -1468,20 +1468,20 @@ li > p:last-of-type:only-child {
         <dd style="margin-left: 1.5em" id="section-2-2.30">Communications between two Devices whose Identities have been verified and use methods such as cryptography to protect any data from eavesdropping or undetected modification.<a href="#section-2-2.30" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.31">Secure Context:</dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.32">An environment meeting the minimum standards of authentication and confidentiality as defined by the W3C Secure Contexts specification <span>[<a href="#W3C.SecureContexts" class="cite xref">W3C.SecureContexts</a>]</span>.<a href="#section-2-2.32" class="pilcrow">¶</a>
+<dt id="section-2-2.31">Referee (Local Manager):</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.32">An Infrastructure Device that is designated as the Local Certificate Authority/trust broker, transitioning a mesh of unverified devices into a hub-and-spoke trust topology. [QUESTION: Is the latter a hard requirement or just how current referees are defined/implemented?]<a href="#section-2-2.32" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.33">Trust Anchor:</dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.34">A Cryptographic Identity that is trusted by a Client Device and/or UA.<a href="#section-2-2.34" class="pilcrow">¶</a>
+<dt id="section-2-2.33">Secure Context:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.34">An environment meeting the minimum standards of authentication and confidentiality as defined by the W3C Secure Contexts specification <span>[<a href="#W3C.SecureContexts" class="cite xref">W3C.SecureContexts</a>]</span>.<a href="#section-2-2.34" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.35">Trust On First Use (TOFU):</dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.36">An approach where a Client Device and/or UA accepts the first Cryptographic Identity presented by an Infrastructure Device or Origin Server. The identity is sometimes confirmed by an End User before acceptance.<a href="#section-2-2.36" class="pilcrow">¶</a>
+<dt id="section-2-2.35">Trust Anchor:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.36">A Cryptographic Identity that is trusted by a Client Device and/or UA.<a href="#section-2-2.36" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.37">Referee (Local Manager):</dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.38">An Infrastructure Device that is designated as the Local Certificate Authority/trust broker, transitioning a mesh of unverified devices into a hub-and-spoke trust topology. [QUESTION: Is the latter a hard requirement or just how current referees are defined/implemented?]<a href="#section-2-2.38" class="pilcrow">¶</a>
+<dt id="section-2-2.37">Trust On First Use (TOFU):</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.38">An approach where a Client Device and/or UA accepts the first Cryptographic Identity presented by an Infrastructure Device or Origin Server. The identity is sometimes confirmed by an End User before acceptance.<a href="#section-2-2.38" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-2.39">User Agent (UA):</dt>
@@ -1494,7 +1494,7 @@ li > p:last-of-type:only-child {
       <h2 id="name-overview-and-goals">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-overview-and-goals" class="section-name selfRef">Overview and Goals</a>
       </h2>
-<p id="section-3-1">SEcure access To Tls Local rEsources (SETTLE) <span>[<a href="#SETTLE" class="cite xref">SETTLE</a>]</span> is concerned with enabling Protected Communications within any Zero-Trust Local Area Network. Protected Communications typically are implemented using of TLS <span>[<a href="#RFC9846" class="cite xref">RFC9846</a>]</span> with X.509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> signed by a known Trust Anchor. Importantly, SETTLE does not deal with the notion of trustworthiness (authentication, authorization, access control, and/or attestation) or Users but instead is focused on the more basic issues of Device Identity verification and the use of a Local Certificate Authority and Trust Anchor to permit local autonomous operation without an active connection to the Internet.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">SEcure access To Tls Local rEsources (SETTLE) <span>[<a href="#SETTLE" class="cite xref">SETTLE</a>]</span> is concerned with enabling Protected Communications within any Zero-Trust Local Area Network. Protected Communications typically are implemented using TLS <span>[<a href="#RFC9846" class="cite xref">RFC9846</a>]</span> with X.509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> signed by a known Trust Anchor. Importantly, SETTLE does not deal with the notion of trustworthiness (authentication, authorization, access control, and/or attestation) or Users but instead is focused on the more basic issues of Device Identity verification and the use of a Local Certificate Authority and Trust Anchor to permit local autonomous operation without an active connection to the Internet.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">The goals of SETTLE include:<a href="#section-3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-3.1">
@@ -1524,7 +1524,7 @@ li > p:last-of-type:only-child {
         </h3>
 <span class="break"></span><dl class="dlParallel" id="section-4.1-1">
           <dt id="section-4.1-1.1">REQ-NAME-01: Unique Identifiers</dt>
-          <dd style="margin-left: 1.5em" id="section-4.1-1.2">SETTLE MUST provide a mechanism to assign unique Device Names. To prevent collisions, names SHOULD incorporate high-entropy device-specific data, such as MAC addresses <span>[<a href="#I-D.housley-lamps-macaddress-on" class="cite xref">I-D.housley-lamps-macaddress-on</a>]</span> or public key hashes <span>[<a href="#I-D.wing-settle-public-key-hash" class="cite xref">I-D.wing-settle-public-key-hash</a>]</span>.<a href="#section-4.1-1.2" class="pilcrow">¶</a>
+          <dd style="margin-left: 1.5em" id="section-4.1-1.2">SETTLE MUST provide a mechanism to assign unique Device Names. A Device Name MUST be unique within its discovery scope, such as the local link, and SHOULD be globally unique. Independently administered networks may still reuse a name; SETTLE MUST ensure that such a collision does not let one Device impersonate another or undermine trust relationships already established. To prevent collisions, names SHOULD incorporate high-entropy device-specific data, such as MAC addresses <span>[<a href="#I-D.housley-lamps-macaddress-on" class="cite xref">I-D.housley-lamps-macaddress-on</a>]</span> or public key hashes <span>[<a href="#I-D.wing-settle-public-key-hash" class="cite xref">I-D.wing-settle-public-key-hash</a>]</span>.<a href="#section-4.1-1.2" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
 <dt id="section-4.1-1.3">REQ-NAME-02: Local Namespace Compatibility</dt>
@@ -1536,7 +1536,7 @@ li > p:last-of-type:only-child {
 </dd>
           <dd class="break"></dd>
 <dt id="section-4.1-1.7">REQ-NAME-04: Standardized Discovery</dt>
-          <dd style="margin-left: 1.5em" id="section-4.1-1.8">SETTLE MUST utilize standard local discovery protocols, such as DNS-Based Service Discovery (DNS-SD) <span>[<a href="#RFC6763" class="cite xref">RFC6763</a>]</span> or Captive Portal APIs <span>[<a href="#RFC8910" class="cite xref">RFC8910</a>]</span>, to locate Devices prior to authentication.<a href="#section-4.1-1.8" class="pilcrow">¶</a>
+          <dd style="margin-left: 1.5em" id="section-4.1-1.8">SETTLE MUST utilize standard local discovery protocols, such as DNS-Based Service Discovery (DNS-SD) <span>[<a href="#RFC6763" class="cite xref">RFC6763</a>]</span>, Unicast Local Discovery (ULD) <span>[<a href="#I-D.ietf-dnssd-uld" class="cite xref">I-D.ietf-dnssd-uld</a>]</span>, or Captive Portal APIs <span>[<a href="#RFC8910" class="cite xref">RFC8910</a>]</span>, to locate Devices prior to authentication.<a href="#section-4.1-1.8" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
 <dt id="section-4.1-1.9">REQ-NAME-05: Privacy-Preserving Discovery</dt>
@@ -1563,7 +1563,7 @@ li > p:last-of-type:only-child {
 </dd>
           <dd class="break"></dd>
 <dt id="section-4.2-1.7">REQ-VERIFY-04: Dynamic Local Trust Store</dt>
-          <dd style="margin-left: 1.5em" id="section-4.2-1.8">User Agents MUST support a Local Trust Anchor.<a href="#section-4.2-1.8" class="pilcrow">¶</a>
+          <dd style="margin-left: 1.5em" id="section-4.2-1.8">User Agents MUST support a Local Trust Anchor. Depending on the trust store, a locally installed WebPKI trust anchor can confer authority over any DNS name. A Local Trust Anchor MUST instead be limited to the local namespaces of REQ-NAME-02, and the User Agent MUST enforce that limit itself, since path validation may ignore name constraints carried in a self-signed trust anchor <span>[<a href="#RFC6818" class="cite xref">RFC6818</a>]</span>.<a href="#section-4.2-1.8" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -1590,7 +1590,7 @@ li > p:last-of-type:only-child {
 </dd>
           <dd class="break"></dd>
 <dt id="section-4.3-1.9">REQ-TRANS-05: Interoperability and Agility</dt>
-          <dd style="margin-left: 1.5em" id="section-4.3-1.10">SETTLE MUST support cryptographic agility to accommodate future algorithm deprecations and ensure interoperability between independent vendor implementations.<a href="#section-4.3-1.10" class="pilcrow">¶</a>
+          <dd style="margin-left: 1.5em" id="section-4.3-1.10">SETTLE MUST support cryptographic agility to accommodate future algorithm deprecations, including the transition to post-quantum cryptography, and ensure interoperability between independent vendor implementations. The transition also affects the OOB Ceremony (REQ-VERIFY-02): post-quantum public keys are too large to carry conveniently in a QR code, and PAKEs in current use, such as SPAKE2 <span>[<a href="#RFC9382" class="cite xref">RFC9382</a>]</span>, rely on the discrete logarithm problem.<a href="#section-4.3-1.10" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -1609,7 +1609,7 @@ li > p:last-of-type:only-child {
 </dd>
           <dd class="break"></dd>
 <dt id="section-4.4-1.5">REQ-ARCH-03: Device Lifecycle and Key Rotation</dt>
-          <dd style="margin-left: 1.5em" id="section-4.4-1.6">SETTLE MUST provide mechanisms for routine key rotation, certificate renewal without user intervention, and trust revocation. A factory reset of a Device MUST cryptographically invalidate and purge all prior local trust bindings.<a href="#section-4.4-1.6" class="pilcrow">¶</a>
+          <dd style="margin-left: 1.5em" id="section-4.4-1.6">SETTLE MUST provide mechanisms for routine key rotation, certificate renewal without user intervention, and trust revocation. A factory reset of a Device MUST erase the private keys, credentials, and trust bindings from its prior enrollment, other than a manufacturer-installed identity. A reset cannot remove trust bindings held by other Devices, only make them obsolete, so SETTLE MUST define how those Devices handle an obsolete binding, including when they were offline at the time of the reset.<a href="#section-4.4-1.6" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -1647,7 +1647,7 @@ li > p:last-of-type:only-child {
         <h3 id="name-factory-reset-incompletenes">
 <a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-factory-reset-incompletenes" class="section-name selfRef">Factory Reset Incompleteness</a>
         </h3>
-<p id="section-5.5-1">Research into IoT protocols has shown that hardware factory resets frequently fail to clear all administrative fabrics or ACLs, leaving devices vulnerable to prior owners. REQ-ARCH-03 mandates that a factory reset MUST completely destroy all cryptographic material linking the device to prior trust domains.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+<p id="section-5.5-1">Research into IoT protocols has shown that hardware factory resets frequently fail to clear all administrative fabrics or ACLs, leaving devices vulnerable to prior owners. REQ-ARCH-03 mandates that a factory reset MUST completely destroy all cryptographic material linking the device to prior local trust domains.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
 </section>
 <section id="section-5.6">
         <h3 id="name-supply-chain-attacks">
@@ -1749,6 +1749,10 @@ li > p:last-of-type:only-child {
       <dd>
 <span class="refAuthor">Fries, S.</span>, <span class="refAuthor">Werner, T.</span>, <span class="refAuthor">Lear, E.</span>, and <span class="refAuthor">M. Richardson</span>, <span class="refTitle">"BRSKI with Pledge in Responder Mode (BRSKI-PRM)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-anima-brski-prm-23</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-anima-brski-prm">https://datatracker.ietf.org/doc/html/draft-ietf-anima-brski-prm</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="I-D.ietf-dnssd-uld">[I-D.ietf-dnssd-uld]</dt>
+      <dd>
+<span class="refAuthor">Lemon, T.</span> and <span class="refAuthor">K. Sperling</span>, <span class="refTitle">"Providing Local Unicast DNS-SD Service on Infrastructure"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dnssd-uld-00</span>, <time datetime="2026-08" class="refDate">August 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnssd-uld">https://datatracker.ietf.org/doc/html/draft-ietf-dnssd-uld</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="I-D.ietf-emu-bootstrapped-tls">[I-D.ietf-emu-bootstrapped-tls]</dt>
       <dd>
 <span class="refAuthor">Friel, O.</span> and <span class="refAuthor">D. Harkins</span>, <span class="refTitle">"Bootstrapped TLS Authentication with Proof of Knowledge"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-emu-bootstrapped-tls-07</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-emu-bootstrapped-tls">https://datatracker.ietf.org/doc/html/draft-ietf-emu-bootstrapped-tls</a>&gt;</span>. </dd>
@@ -1796,6 +1800,10 @@ li > p:last-of-type:only-child {
 <dt id="RFC3514">[RFC3514]</dt>
       <dd>
 <span class="refAuthor">Bellovin, S.</span>, <span class="refTitle">"The Security Flag in the IPv4 Header"</span>, <span class="seriesInfo">RFC 3514</span>, <span class="seriesInfo">DOI 10.17487/RFC3514</span>, <time datetime="2003-04" class="refDate">April 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3514">https://www.rfc-editor.org/info/rfc3514</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6818">[RFC6818]</dt>
+      <dd>
+<span class="refAuthor">Yee, P.</span>, <span class="refTitle">"Updates to the Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 6818</span>, <span class="seriesInfo">DOI 10.17487/RFC6818</span>, <time datetime="2013-01" class="refDate">January 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6818">https://www.rfc-editor.org/info/rfc6818</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6973">[RFC6973]</dt>
       <dd>
