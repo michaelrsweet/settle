@@ -98,7 +98,7 @@
 	<dd>Communications between two Devices whose Identities have been verified and use methods such as cryptography to protect any data from eavesdropping or undetected modification.</dd>
 
         <dt>Referee (Local Manager):</dt>
-        <dd>An Infrastructure Device that is designated as the Local Certificate Authority/trust broker, transitioning a mesh of unverified devices into a hub-and-spoke trust topology. [QUESTION: Is the latter a hard requirement or just how current referees are defined/implemented?]</dd>
+        <dd>An Infrastructure Device that is designated as the trust broker for the local network, for example by acting as the Local Certificate Authority. Other Devices are then trusted through the Referee, which typically turns a mesh of unverified Devices into a hub-and-spoke trust topology.</dd>
 
         <dt>Secure Context:</dt>
         <dd>An environment meeting the minimum standards of authentication and confidentiality as defined by the W3C Secure Contexts specification <xref target="W3C.SecureContexts"/>.</dd>
@@ -124,7 +124,7 @@
       <ul>
         <li><strong>Autonomous/Semi-Autonomous Operation:</strong> Allow Devices to connect and obtain credentials automatically whenever possible.</li>
         <li><strong>Common Connection/Policy Support:</strong>: Make it possible for Devices to better adapt and participate on LANs with different capabilities and/or policies, particularly home vs. enterprise networks.</li>
-        <li><strong>Improved Security:</strong> Eliminate the use of TOFU policies for IoT Devices by using X.509 certificates that are signed by a Local Trust Anchor.</li>
+        <li><strong>Improved Security:</strong> Eliminate the use of TOFU policies for IoT Devices by using X.509 certificates that a Client Device can verify through locally established trust, such as a Local Trust Anchor.</li>
         <li><strong>Improved User Experience:</strong> Enable normal HTTPS access to Devices such as cameras, printers, routers, etc. using a standard User Agent such as a web browser.</li>
         <li><strong>Standalone Operation:</strong> Do not require an Internet connection to function. Obviously there could be cloud/distributed/managed solutions but the core architecture/protocols do not require it.</li>
       </ul>
@@ -132,6 +132,8 @@
 
 
     <section title="Requirements">
+      <t>In this section, "SETTLE" refers to the solution, or set of solutions, that meets these requirements. The requirements state properties such a solution needs to have and do not select a protocol or an architecture: a mechanism introduced by "such as" or "e.g." is an example, not a choice. A requirement to support a capability, such as a Referee (REQ-ARCH-02) or a manufacturer-installed identity (REQ-VERIFY-03), means that the capability is available to deployments that need it, not that every Device or deployment uses it.</t>
+
       <section title="Naming and Discovery (REQ-NAME)">
         <dl>
           <dt>REQ-NAME-01: Unique Identifiers</dt>
@@ -147,7 +149,7 @@
           <dd>SETTLE MUST utilize standard local discovery protocols, such as DNS-Based Service Discovery (DNS-SD) <xref target="RFC6763"/>, Unicast Local Discovery (ULD) <xref target="I-D.ietf-dnssd-uld"/>, or Captive Portal APIs <xref target="RFC8910"/>, to locate Devices prior to authentication. Discovery records MAY carry transport-security parameters such as a certificate fingerprint <xref target="I-D.liu-add-dnssd-edns"/>, but these are unauthenticated hints and MUST NOT be treated as a Trust Anchor distribution channel (REQ-VERIFY-01).</dd>
 
           <dt>REQ-NAME-05: Privacy-Preserving Discovery</dt>
-          <dd>The discovery mechanism MUST prevent passive tracking of Devices or Users. SETTLE MUST NOT broadcast static identifiers (like MAC addresses or static account hashes) in plaintext if the Device is portable. SETTLE SHOULD utilize rotating identifiers or cryptographic mechanisms like Private Set Intersection (PSI). See <xref target="RFC8882"/> for an analysis of discovery privacy requirements.</dd>
+          <dd>The discovery mechanism MUST prevent passive tracking of Devices or Users. SETTLE MUST NOT broadcast static identifiers (like MAC addresses or static account hashes) in plaintext if the Device is portable. Rotating identifiers and cryptographic mechanisms like Private Set Intersection (PSI) are examples of how this can be achieved. See <xref target="RFC8882"/> for an analysis of discovery privacy requirements.</dd>
         </dl>
       </section>
 
@@ -176,7 +178,7 @@
           <dd>To minimize downgrade attacks, the system SHOULD utilize Implicit TLS (connect-then-handshake) rather than connection-upgrade mechanisms (e.g., STARTTLS) <xref target="RFC8314"/>.</dd>
 
           <dt>REQ-TRANS-03: Subject Alternative Name (SAN) Matching</dt>
-          <dd>Device certificates MUST populate the Subject Alternative Name (SAN) extension. User Agents MUST verify these identities in accordance with <xref target="RFC9525"/> and IoT TLS profiles <xref target="I-D.ietf-uta-tls13-iot-profile"/>.</dd>
+          <dd>Device certificates MUST populate the Subject Alternative Name (SAN) extension. User Agents MUST verify these identities in accordance with <xref target="RFC9525"/>. TLS profiles for constrained Devices, such as <xref target="I-D.ietf-uta-tls13-iot-profile"/>, can apply in addition.</dd>
 
           <dt>REQ-TRANS-04: Browser Policy Compatibility</dt>
           <dd>SETTLE MUST work within browser Local Network Access (LNA) policies <xref target="WICG.LNA"/>. Devices MUST be able to serve certificates that validate under SETTLE's trust model, so that a connection permitted under LNA also yields a Secure Context. SETTLE SHOULD make the trust it establishes available to User Agents as an input to LNA decisions, so that browsers can reduce redundant prompts for Devices the User has already verified, without weakening LNA's protection against unauthorized origins.</dd>
@@ -192,7 +194,7 @@
           <dd>SETTLE MUST operate securely without requiring Internet connectivity.</dd>
 
           <dt>REQ-ARCH-02: Referee / Delegation Support</dt>
-          <dd>SETTLE MUST support a hierarchical local trust model where a mutually authenticated Referee can issue credentials to Devices.</dd>
+          <dd>SETTLE MUST support a delegated local trust model where a mutually authenticated Referee can vouch for Devices, for example by issuing credentials to them, so that a Client Device does not need a separate OOB Ceremony (REQ-VERIFY-02) for each Device.</dd>
 
           <dt>REQ-ARCH-03: Device Lifecycle and Key Rotation</dt>
           <dd>SETTLE MUST provide mechanisms for routine key rotation, certificate renewal without user intervention, and trust revocation. A factory reset of a Device MUST erase the private keys, credentials, and trust bindings from its prior enrollment, other than a manufacturer-installed identity. A reset cannot remove trust bindings held by other Devices, only make them obsolete, so SETTLE MUST define how those Devices handle an obsolete binding, including when they were offline at the time of the reset.</dd>
@@ -513,7 +515,7 @@
         <li><strong>BRSKI and BRSKI-PRM:</strong> Bootstrapping Remote Secure Key Infrastructure <xref target="RFC8995"/> automates provisioning using manufacturer IDevIDs. BRSKI-PRM <xref target="I-D.ietf-anima-brski-prm"/> demonstrates the value of <em>object security</em> (signed Vouchers) over transport security for environments where pledges cannot initiate TLS connections. While powerful, BRSKI requires a supply chain root of trust, which is absent in self-hosted consumer scenarios.</li>
         <li><strong>Matter Protocol:</strong> Matter utilizes Password-Authenticated Session Establishment (PASE) <xref target="Matter"/>, built on SPAKE2+ <xref target="RFC9383"/>, for onboarding with a 27-bit passcode. A PAKE tolerates a low-entropy passcode when an attacker is limited to online guesses; the flaws reported by security analyses lie in the handling, notably static salts, rather than in the passcode length itself.</li>
         <li><strong>Wi-Fi Easy Connect (DPP):</strong> Uses QR codes containing public keys to bootstrap WPA3 credentials <xref target="DPP"/>. This provides a strong precedent for OOB ceremonies, though it targets network-layer access rather than application-layer TLS identity.</li>
-        <li><strong>Open Screen Protocol:</strong> The W3C Open Screen Network Protocol <xref target="W3C.OpenScreen"/> provides a particularly clean construction for local device pairing without pre-shared keys. Devices establish a provisional QUIC/TLS connection using self-signed certificates, then authenticate it via SPAKE2 <xref target="RFC9382"/> bound to a user-transferred PIN. This pattern of "connect first, authenticate via PAKE second" is directly applicable to SETTLE's Track A. Emerging IETF work on integrating PAKEs directly into TLS 1.3 <xref target="I-D.ietf-tls-pake"/> may provide a standardized transport for this class of bootstrapping.</li>
+        <li><strong>Open Screen Protocol:</strong> The W3C Open Screen Network Protocol <xref target="W3C.OpenScreen"/> provides a particularly clean construction for local device pairing without pre-shared keys. Devices establish a provisional QUIC/TLS connection using self-signed certificates, then authenticate it via SPAKE2 <xref target="RFC9382"/> bound to a user-transferred PIN. This pattern of "connect first, authenticate via PAKE second" is directly applicable to the OOB Ceremony (REQ-VERIFY-02). Emerging IETF work on integrating PAKEs directly into TLS 1.3 <xref target="I-D.ietf-tls-pake"/> may provide a standardized transport for this class of bootstrapping.</li>
         <li><strong>AirDrop / PrivateDrop:</strong> Traditional local discovery using truncated hashes leaks user identifiers. Research into Private Set Intersection (PSI) <xref target="PrivateDrop"/> demonstrates that privacy-preserving mutual discovery is feasible with sub-second latency.</li>
         <li><strong>SDSI/SPKI:</strong> Simple Distributed Security Infrastructure <xref target="RFC2693"/> proposed a decentralized PKI binding authorizations directly to keys. While conceptually aligned with local trust, modern web browsers mandate X.509 <xref target="RFC5280"/> for compatibility.</li>
         <li><strong>Local Public Key Hashes:</strong> Approaches that embed public key hashes into local domain names <xref target="I-D.wing-settle-public-key-hash"/> offer self-certifying namespaces but sacrifice human-readability.</li>
