@@ -128,6 +128,8 @@
         <li><strong>Improved User Experience:</strong> Enable normal HTTPS access to Devices such as cameras, printers, routers, etc. using a standard User Agent such as a web browser.</li>
         <li><strong>Standalone Operation:</strong> Do not require an Internet connection to function. Obviously there could be cloud/distributed/managed solutions but the core architecture/protocols do not require it.</li>
       </ul>
+
+      <t>Once a User Agent trusts a Device, the Device should be reachable through existing application protocols, such as HTTPS and WebTransport <xref target="W3C.WebTransport"/>, using their normal server authentication. Applications should not need protocol-specific exceptions or a separate trust establishment step for each protocol.</t>
     </section>
 
 
@@ -522,7 +524,7 @@
         <li><strong>DANE and SSHFP:</strong> <xref target="RFC6698"/> and <xref target="RFC4255"/> publish a certificate or key fingerprint in DNS instead of relying on a CA. Both need DNSSEC to protect that record, and a local namespace has no signed parent, so SSHFP in practice falls back to TOFU.</li>
         <li><strong>Opportunistic Security:</strong> <xref target="RFC7435"/> treats unauthenticated encryption and stored TOFU state as better than nothing where authentication is impossible. On a local network the User is usually present, so an OOB Ceremony is available and REQ-VERIFY-01 asks for it.</li>
         <li><strong>EAP-NOOB:</strong> <xref target="RFC9140"/> bootstraps a device with no credentials using a user-assisted OOB message generated per ceremony, and rejects static printed codes because they can leak and be reused.</li>
-        <li><strong>WebTransport Certificate Hashes:</strong> Browsers accept a self-signed certificate from a local server when its SHA-256 hash is supplied out of band, limited to ECDSA keys and 14 days validity <xref target="W3C.WebTransport"/>. This is the extent of CA-free local TLS in a browser today.</li>
+        <li><strong>WebTransport Certificate Hashes:</strong> Browsers accept a self-signed certificate from a local server when its SHA-256 hash is supplied out of band, limited to ECDSA keys and 14 days validity <xref target="W3C.WebTransport"/>. This is the extent of CA-free local TLS in a browser today. The page still has to obtain the hash through a channel it already trusts, and the hash authenticates only that WebTransport session: it does not give the User Agent trust in the Device that ordinary HTTPS or other protocols can reuse.</li>
         <li><strong>Local Referees and ACME:</strong> Architectures utilizing a central local hub to authenticate servers <xref target="I-D.wing-settle-referee"/> or issue certificates via a local ACME server <xref target="I-D.sweet-iot-acme"/> optimize UX but require initial bootstrapping of the Referee itself.</li>
       </ul>
     </section>
