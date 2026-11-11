@@ -131,6 +131,37 @@
     </section>
 
 
+    <section title="Use Cases">
+      <t>The use cases below are representative, not exhaustive. They describe what people need to do and do not suggest a design; their purpose is to motivate the requirements in the next section and to show which requirements matter in which deployments. Not every requirement applies to every use case.</t>
+
+      <dl>
+        <dt>UC-1: Administering a Home Device</dt>
+        <dd>A User opens the administration page of a home router, printer, or network storage device in a web browser, for first-time setup and for later changes. There is one Device and no administrator, and the User can usually see and touch the Device. The User needs the browser to confirm that it has reached that Device before a password is entered, without certificate warnings and without having to understand certificates.</dd>
+
+        <dt>UC-2: Local Services from Non-Browser Clients</dt>
+        <dd>An operating system or application on a Client Device uses a local service such as printing or file sharing. These services run over TLS but are often used outside a web browser. The client needs the same assurance about the Device as in UC-1, and should not need a separate way of establishing trust for each protocol.</dd>
+
+        <dt>UC-3: Several Devices and Several Clients</dt>
+        <dd>A household or small office without IT staff has several Devices and several Client Devices, including those of family members and guests. Having every person verify every Device separately does not scale. Users need trust that was established once to be usable from their other Client Devices, and need a guest's Client Device, which may be compromised, to be unable to impersonate a Device.</dd>
+
+        <dt>UC-4: Managed Networks</dt>
+        <dd>An organization operates many Devices, such as printers, cameras, and switches, and may run its own naming and certificate services. An administrator who is not physically at each Device needs to enroll Devices, apply policy, and renew or revoke their identities, and needs Client Devices that join the network to trust those Devices without action by each User.</dd>
+
+        <dt>UC-5: Visiting Another Network</dt>
+        <dd>A User takes a Client Device to a network they do not control, such as a hotel, a library, or a friend's home, that has useful Devices such as printers. A Device Name there, such as "printer.local", may match one the User already trusts at home. The User needs to use a Device on the visited network without giving that network authority over anything else, and needs passwords, cookies, and other state saved for a Device at home to stay out of reach of a Device with the same name elsewhere.</dd>
+
+        <dt>UC-6: Web Applications Using a Local Device</dt>
+        <dd>A web application, served from the Device itself or from the Internet, communicates with a Device on the local network, for example to view a camera or baby monitor, show photos from network storage, or control an appliance. Such applications rely on browser features that require a Secure Context. Users value these Devices continuing to work when the Internet connection or the vendor's service is unavailable, and after the vendor has stopped supporting the Device. The application needs a Secure Context with the Device, within the browser's local network access policy, using the same code whether or not the Internet is reachable.</dd>
+
+        <dt>UC-7: Replacing, Resetting, or Transferring a Device</dt>
+        <dd>A Device is replaced by a new one that takes over its name, is reset to factory settings, or is sold or given to someone else. Users need a replacement to be accepted through a deliberate step and not by dismissing an error, need a different Device that appears under a known name to be noticed, and need a Device that changes hands to keep no access to, and no trust from, the network it left.</dd>
+
+        <dt>UC-8: Field Deployments Without Infrastructure</dt>
+        <dd>A team working where there is no Internet access, such as humanitarian field workers after a disaster or a class in an area with poor connectivity, brings its own Infrastructure Device, for example a laptop or portable hub acting as a server, and forms a temporary network from whatever devices are at hand. Client Devices use a web application served from that Device to collect, share, and synchronize data, sometimes for days, before any of it can be uploaded elsewhere. The team needs to establish trust in the Device on site, with no Internet connection at any step, and needs that trust to hold as the Device moves between sites and networks.</dd>
+      </dl>
+    </section>
+
+
     <section title="Requirements">
       <section title="Naming and Discovery (REQ-NAME)">
         <dl>
@@ -197,6 +228,35 @@
           <dt>REQ-ARCH-03: Device Lifecycle and Key Rotation</dt>
           <dd>SETTLE MUST provide mechanisms for routine key rotation, certificate renewal without user intervention, and trust revocation. A factory reset of a Device MUST erase the private keys, credentials, and trust bindings from its prior enrollment, other than a manufacturer-installed identity. A reset cannot remove trust bindings held by other Devices, only make them obsolete, so SETTLE MUST define how those Devices handle an obsolete binding, including when they were offline at the time of the reset.</dd>
         </dl>
+      </section>
+
+      <section title="Requirements and Use Cases">
+        <t>The following table lists the use cases that chiefly motivate each requirement. "All" marks a requirement that follows from the problem statement and is not specific to a use case.</t>
+
+        <table>
+          <thead>
+            <tr><th>Requirement</th><th>Use Cases</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>REQ-NAME-01</td><td>UC-3, UC-5, UC-7</td></tr>
+            <tr><td>REQ-NAME-02</td><td>All</td></tr>
+            <tr><td>REQ-NAME-03</td><td>All</td></tr>
+            <tr><td>REQ-NAME-04</td><td>All</td></tr>
+            <tr><td>REQ-NAME-05</td><td>UC-5, UC-8</td></tr>
+            <tr><td>REQ-VERIFY-01</td><td>All</td></tr>
+            <tr><td>REQ-VERIFY-02</td><td>UC-1, UC-3, UC-7, UC-8</td></tr>
+            <tr><td>REQ-VERIFY-03</td><td>UC-4</td></tr>
+            <tr><td>REQ-VERIFY-04</td><td>UC-1, UC-5, UC-6</td></tr>
+            <tr><td>REQ-TRANS-01</td><td>All</td></tr>
+            <tr><td>REQ-TRANS-02</td><td>UC-2</td></tr>
+            <tr><td>REQ-TRANS-03</td><td>All</td></tr>
+            <tr><td>REQ-TRANS-04</td><td>UC-6</td></tr>
+            <tr><td>REQ-TRANS-05</td><td>All</td></tr>
+            <tr><td>REQ-ARCH-01</td><td>All</td></tr>
+            <tr><td>REQ-ARCH-02</td><td>UC-3, UC-4</td></tr>
+            <tr><td>REQ-ARCH-03</td><td>UC-4, UC-7</td></tr>
+          </tbody>
+        </table>
       </section>
     </section>
 
