@@ -135,7 +135,7 @@
       <section title="Naming and Discovery (REQ-NAME)">
         <dl>
           <dt>REQ-NAME-01: Unique Identifiers</dt>
-          <dd>SETTLE MUST provide a mechanism to assign unique Device Names. A Device Name MUST be unique within its discovery scope, such as the local link, and SHOULD be globally unique. Independently administered networks may still reuse a name; SETTLE MUST ensure that such a collision does not let one Device impersonate another or undermine trust relationships already established. To prevent collisions, names SHOULD incorporate high-entropy device-specific data, such as MAC addresses <xref target="I-D.housley-lamps-macaddress-on"/> or public key hashes <xref target="I-D.wing-settle-public-key-hash"/>.</dd>
+          <dd>SETTLE MUST provide a mechanism to assign unique Device Names. A Device Name MUST be unique within its discovery scope, such as the local link, and SHOULD be globally unique. Independently administered networks may still reuse a name; SETTLE MUST ensure that such a collision does not let one Device impersonate another or undermine trust relationships already established. Uniqueness is a property of discovery only: a discovered name does not by itself establish the identity of a Device or its authority to use that name (REQ-VERIFY-05), and Devices whose names collide do not share a Web origin (REQ-TRANS-06). To prevent collisions, names SHOULD incorporate high-entropy device-specific data, such as MAC addresses <xref target="I-D.housley-lamps-macaddress-on"/> or public key hashes <xref target="I-D.wing-settle-public-key-hash"/>.</dd>
 
           <dt>REQ-NAME-02: Local Namespace Compatibility</dt>
           <dd>Device Names MUST utilize standardized namespaces reserved for local or non-DNS use to ensure broad client support. Valid namespaces include ".local" for mDNS <xref target="RFC6762"/>, "home.arpa." for unicast DNS <xref target="RFC8375"/>, or ".alt" <xref target="RFC9476"/>.</dd>
@@ -163,7 +163,10 @@
           <dd>SETTLE SHOULD support the use of manufacturer-installed certificates (e.g., IDevID <xref target="IEEE.802.1AR"/>, <xref target="I-D.irtf-t2trg-taxonomy-manufacturer-anchors"/>). When used, SETTLE MUST define a mechanism (e.g., Vouchers <xref target="RFC8366"/>) to cryptographically bind the manufacturer-provided identity to the user-facing Device Name.</dd>
 
           <dt>REQ-VERIFY-04: Dynamic Local Trust Store</dt>
-          <dd>User Agents MUST support a Local Trust Anchor. Depending on the trust store, a locally installed WebPKI trust anchor can confer authority over any DNS name. A Local Trust Anchor MUST instead be limited to the local namespaces of REQ-NAME-02, and the User Agent MUST enforce that limit itself, since path validation may ignore name constraints carried in a self-signed trust anchor <xref target="RFC6818"/>.</dd>
+          <dd>User Agents MUST support a Local Trust Anchor. Depending on the trust store, a locally installed WebPKI trust anchor can confer authority over any DNS name. A Local Trust Anchor MUST instead be limited to the local namespaces of REQ-NAME-02, and the User Agent MUST enforce that limit itself, since path validation may ignore name constraints carried in a self-signed trust anchor <xref target="RFC6818"/>. Within those namespaces, the authority of a Local Trust Anchor MUST be limited to the scope it was explicitly trusted for, such as the name of a single paired Device or the names administered by a Referee; an anchor trusted for one name under ".local" is not thereby an authority for all of ".local".</dd>
+
+          <dt>REQ-VERIFY-05: Authority to Assert a Name</dt>
+          <dd>SETTLE MUST bind each Device Name to the Cryptographic Identity entitled to assert it, either the Device Identity itself or a Local Trust Anchor, such as a Referee, acting for it. This binding MUST be established through the OOB Ceremony (REQ-VERIFY-02), a pre-installed identity (REQ-VERIFY-03), or delegation by a Referee (REQ-ARCH-02), and MUST NOT be inferred from the network a Client Device happens to be attached to or from unauthenticated discovery. Two independently administered networks can then each have a "nas.local" without either Device being able to stand in for the other.</dd>
         </dl>
       </section>
 
@@ -183,6 +186,9 @@
 
           <dt>REQ-TRANS-05: Interoperability and Agility</dt>
           <dd>SETTLE MUST support cryptographic agility to accommodate future algorithm deprecations, including the transition to post-quantum cryptography, and ensure interoperability between independent vendor implementations. The transition also affects the OOB Ceremony (REQ-VERIFY-02): post-quantum public keys are too large to carry conveniently in a QR code, and PAKEs in current use, such as SPAKE2 <xref target="RFC9382"/>, rely on the discrete logarithm problem.</dd>
+
+          <dt>REQ-TRANS-06: Origin Isolation</dt>
+          <dd>Where Devices are reached as Web origins, independently trusted Devices MUST NOT silently share an origin, or state tied to it such as cookies, storage, service workers, and granted permissions, when their Device Names collide. This document does not prescribe how such collisions are resolved: collision-resistant names (REQ-NAME-01), a User Agent that tells the origins apart, or binding a name to one identity at a time are all possible approaches.</dd>
         </dl>
       </section>
 
@@ -195,7 +201,7 @@
           <dd>SETTLE MUST support a hierarchical local trust model where a mutually authenticated Referee can issue credentials to Devices.</dd>
 
           <dt>REQ-ARCH-03: Device Lifecycle and Key Rotation</dt>
-          <dd>SETTLE MUST provide mechanisms for routine key rotation, certificate renewal without user intervention, and trust revocation. A factory reset of a Device MUST erase the private keys, credentials, and trust bindings from its prior enrollment, other than a manufacturer-installed identity. A reset cannot remove trust bindings held by other Devices, only make them obsolete, so SETTLE MUST define how those Devices handle an obsolete binding, including when they were offline at the time of the reset.</dd>
+          <dd>SETTLE MUST provide mechanisms for routine key rotation, certificate renewal without user intervention, and trust revocation. A factory reset of a Device MUST erase the private keys, credentials, and trust bindings from its prior enrollment, other than a manufacturer-installed identity. A reset cannot remove trust bindings held by other Devices, only make them obsolete, so SETTLE MUST define how those Devices handle an obsolete binding, including when they were offline at the time of the reset. SETTLE MUST also distinguish certificate renewal and key rotation, which continue an established identity, from a Device Name being taken over by a different Device, such as a replacement printer. Trust established for the earlier Device MUST NOT carry over to the new one on the strength of the name alone; it MUST come from a new OOB Ceremony (REQ-VERIFY-02) or from an authority already trusted for that name (REQ-VERIFY-05), such as a Referee.</dd>
         </dl>
       </section>
     </section>
@@ -219,6 +225,14 @@
 
       <section title="Factory Reset Incompleteness">
         <t>Research into IoT protocols has shown that hardware factory resets frequently fail to clear all administrative fabrics or ACLs, leaving devices vulnerable to prior owners. REQ-ARCH-03 mandates that a factory reset MUST completely destroy all cryptographic material linking the device to prior local trust domains.</t>
+      </section>
+
+      <section title="Name Reuse and Device Replacement">
+        <t>A Device Name can be reused on independently administered networks, or pass to a different Device when one is replaced, for example a new printer taking over "printer.local". A User Agent that trusted the earlier Device needs to recognize that the Device behind the name has changed, much as a person recognizes that a stranger introducing themselves by a neighbor's name is not that neighbor. REQ-VERIFY-05 and REQ-ARCH-03 therefore tie trust to the identity entitled to assert a name and not to the name itself.</t>
+
+        <t>Replacing a Device is a legitimate operation and has to remain possible, but as an explicit step, such as removing the old Device and pairing the new one, and not by overriding a certificate error, which is how a User would also come to accept an impersonator. Where a Referee issues certificates, a valid certificate for a name shows that the Referee still vouches for that name, not that the same physical Device is behind it. Solutions need to be clear about which of the two they provide: continuity of the Device, or continuity of the authority over its name.</t>
+
+        <t>A Device that takes over an existing Web origin may also inherit the cookies, storage, service workers, and permissions of its predecessor. REQ-TRANS-06 covers Devices that are trusted independently; solutions also need to consider whether such state is retained when a name is reassigned within a single trust domain.</t>
       </section>
 
       <section title="Supply Chain Attacks">
